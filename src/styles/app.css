@@ -1,0 +1,160 @@
+@import "$styles/reset.css";
+@import "$styles/config.css";
+@import "$styles/utils.css";
+@import "$styles/form.css";
+@import "$styles/transition.css";
+
+body {
+  --text-color: var(--dark-text);
+  --heading-color: var(--dark-heading);
+  --bg-color: var(--lite-bg);
+  --border: var(--lite-bg-border);
+
+  color: var(--text-color);
+  background-color: var(--bg-color);
+
+  .alt-bg {
+    background-color: var(--alt-bg-dark);
+  }
+}
+
+body:has(.dark) {
+  --text-color: var(--lite-text);
+  --heading-color: var(--lite-heading);
+  --bg-color: var(--dark-bg);
+  --border: var(--dark-bg-border);
+  --shadow-inset: var(--gray-300) 0px 0px 2px 0px inset;
+
+  .alt-bg {
+    background-color: var(--alt-bg-lite);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body:has(.system) {
+    --text-color: var(--dark-text);
+    --heading-color: var(--dark-heading);
+    --bg-color: var(--lite-bg);
+    --border: var(--lite-bg-border);
+    --shadow-inset: var(--gray-800) 0px 0px 2px 0px inset;
+
+    .alt-bg {
+      background-color: var(--alt-bg-dark);
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body:has(.system) {
+    --text-color: var(--lite-text);
+    --heading-color: var(--lite-heading);
+    --bg-color: var(--dark-bg);
+    --border: var(--dark-bg-border);
+    --shadow-inset: var(--gray-300) 0px 0px 2px 0px inset;
+
+    .alt-bg {
+      background-color: var(--alt-bg-lite);
+    }
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading,
+strong,
+em {
+  color: var(--heading-color);
+}
+
+a {
+  text-decoration: none;
+  color: var(--blue-300);
+}
+
+a,
+p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+}
+
+a,
+button,
+svg {
+  cursor: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-size: 1.8rem;
+}
+
+::selection {
+  color: var(--bg-color);
+  background-color: var(--text-color);
+}
+
+.wide-screen {
+  display: none !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+  a,
+  button,
+  svg {
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 769px) {
+  .wide-screen {
+    display: block !important;
+  }
+}
+
+.danger {
+  color: var(--danger-color);
+  background-color: var(--danger-bg);
+  border: var(--border);
+  border-color: var(--danger-color);
+}
+
+.success {
+  color: var(--success-color);
+  background-color: var(--success-bg);
+  border: var(--border);
+  border-color: var(--success-color);
+}
+
+.info {
+  color: var(--info-color);
+  background-color: var(--info-bg);
+  border: var(--border);
+  border-color: var(--info-color);
+}
+
+.warn {
+  color: var(--warn-color);
+  background-color: var(--warn-bg);
+  border: var(--border);
+  border-color: var(--warn-color);
+}
+
+.app_installed {
+  display: none;
+}
+
+@media (display-mode: browser) {
+  .app_installed {
+    display: block;
+  }
+}

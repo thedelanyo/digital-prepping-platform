@@ -1,0 +1,114 @@
+@font-face {
+  font-family: Atkinson;
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url("$styles/assets/atkinson.ttf") format("truetype");
+}
+
+:root {
+  /* font family */
+  --font-family: Atkinson, "Roboto", Verdana, sans-serif;
+
+  /* colors */
+  --prim-color: #ff7700;
+
+  --fire-color: #f00f08;
+  --bolt-color: #ffd700;
+  --star-color: #3fcf8e;
+
+  --blue-100: #bcd4f8;
+  --blue-200: #92befc;
+  --blue-300: #5094fb;
+  --blue-400: #0d6efd;
+  --blue-500: #021f77;
+
+  --red-100: #f7dfe1;
+  --red-200: #fdadb4;
+  --red-300: #e35d6a;
+  --red-400: #dc3545;
+  --red-500: #5d020b;
+
+  --green-100: #cef8e5;
+  --green-200: #83fbc3;
+  --green-300: #479f76;
+  --green-400: #198754;
+  --green-500: #025930;
+  --green-600: #013b20;
+
+  --orange-100: #f5e4d5;
+  --orange-200: #facfac;
+  --orange-300: #fd9843;
+  --orange-400: #fd7e14;
+  --orange-500: #6a3103;
+
+  --gray-100: #e9ecef;
+  --gray-200: #dee2e6;
+  --gray-300: #c6cbcf;
+  --gray-400: #adb5bd;
+  --gray-500: #aaabac;
+  --gray-600: #495057;
+  --gray-700: #343a40;
+  --gray-800: #212529;
+
+  --dark: #2f2f2f;
+  --dark-shade: #151515;
+
+  --white: #fff;
+  --lite: #efefef;
+
+  --lite-bg: #f4f4f4;
+  --dark-bg: var(--dark-shade);
+
+  --dark-text: var(--gray-800);
+  --lite-text: var(--gray-300);
+
+  --lite-heading: var(--gray-100);
+  --dark-heading: var(--dark-shade);
+
+  --alt-bg-lite: var(--gray-600);
+  --alt-bg-dark: var(--gray-300);
+
+  --success-color: var(--green-600);
+  --success-bg: var(--green-100);
+
+  --danger-bg: var(--red-100);
+  --danger-color: var(--red-500);
+
+  --info-bg: var(--blue-100);
+  --info-color: var(--blue-500);
+
+  --warn-bg: var(--orange-100);
+  --warn-color: var(--orange-500);
+
+  /* shadows */
+  --shadow-inset: var(--gray-400) 0px 0px 2px 0px inset;
+
+  /* radius */
+  --radius-small: 1px;
+  --radius-medium: 4px;
+  --radius-base: 5px;
+  --radius-large: 7px;
+  --radius-xl: 12px;
+  --radius-xxl: 16px;
+
+  /* border */
+  --lite-bg-border: 0.8px solid var(--gray-700);
+  --dark-bg-border: 0.8px solid var(--gray-500);
+
+  /* Gap - padding, margin */
+  --gap-nano: 0.35rem;
+  --gap-micro: 0.5rem;
+  --gap-smallest: 0.7rem;
+  --gap-small: 0.85rem;
+  --gap-base: 1rem;
+  --gap-double: 2rem;
+  --gap-medium: 3rem;
+  --gap-large: 5rem;
+  --gap-xl: 7.5rem;
+  --gap-xxl: 10rem;
+
+  font-family: var(--font-family);
+  font-size: clamp(0.9rem, 0.9rem + 0.7svw, 1.1rem);
+  font-weight: normal;
+}
