@@ -23,7 +23,7 @@ form > div {
 input,
 textarea,
 select {
-  padding: var(--gap-small);
+  padding: var(--gap-smallest) var(--gap-small);
   border-radius: var(--radius-medium);
   display: block;
   background-color: inherit;
@@ -66,7 +66,6 @@ form label {
 
 select {
   appearance: none;
-  text-align: center;
   -moz-appearance: none;
   -webkit-appearance: none;
 }
@@ -216,7 +215,6 @@ button,
   position: relative;
   border-radius: var(--radius-base);
   text-transform: capitalize;
-  font-size: 1.2rem;
 }
 
 form button:not(.inline-control button) {

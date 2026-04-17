@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { page } from "$app/state";
   import Svg from "$components/modals/svg.svelte";
   import { hamburgerIcons } from "$lib/client/icons";
   //   import { downloadIcon, plusIcon } from "$lib/client/icons";
   import { onMount } from "svelte";
-  import { fly } from "svelte/transition";
+  import Head from "./head.svelte";
   //   import Logo from "./logo.svelte";
   //   import Nav from "./nav.svelte";
   //   import Shortcut from "./shortcuts.svelte";
@@ -14,15 +13,10 @@
     userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
   }
 
-  let toggle = $state("");
-
-  const dimension = "25";
+  let is_open = $state(false);
 
   let differedPrompt = $state<PromptEvent | null>(null);
   let app_installed = $state(false);
-
-  let { pathname } = $derived(page.url);
-  let { user } = $derived(page.data);
 
   onMount(async () => {
     const nav = navigator as any;
@@ -44,28 +38,16 @@
   };
 </script>
 
-<header in:fly={{ y: 30 }}>
+<Head>
   <button class="ghost">
     <Svg ds={hamburgerIcons} />
   </button>
-  <button>contribute</button>
-</header>
+  <a class="button" href="/app/contribute">contribute</a>
+</Head>
 
 <style>
-  header {
-    background-color: var(--bg-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: var(--border);
-    position: sticky;
-    top: 0;
-    padding: var(--gap-smallest);
-    z-index: 500;
-    view-transition-name: header;
-  }
-
-  button {
+  button,
+  a {
     padding: var(--gap-micro) var(--gap-small);
     border-radius: 2rem;
     font-size: 0.8rem;

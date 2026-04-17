@@ -15,12 +15,4 @@
     padding: 2.5rem var(--gap-base) 4rem;
     margin: 0 auto;
   }
-
-  @media (min-width: 769px) {
-    main {
-      gap: 6rem;
-      padding-inline: 1rem;
-      margin: 0 auto;
-    }
-  }
 </style>

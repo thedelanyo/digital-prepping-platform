@@ -1,4 +1,5 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { writable } from "svelte/store";
 
 export const prep_cards = sqliteTable("prep_cards", {
   id: text("id", "").primaryKey(),
@@ -14,14 +15,21 @@ export const prep_cards = sqliteTable("prep_cards", {
 
 export type PrepCards = typeof prep_cards.$inferSelect;
 
-export const prepsInit: PrepCards = {
+export const prepInit = {
   id: "",
   course_id: "",
   course_title: "",
-  question: "",
-  options: [],
-  answer_code: 0,
   creator_name: "",
   creator_id: "",
   topic: "",
 };
+
+export const prep = writable(prepInit);
+
+type Question = {
+  title: "";
+  options: [];
+  answer_code: 0;
+};
+
+export const questions = writable<Question[]>([]);

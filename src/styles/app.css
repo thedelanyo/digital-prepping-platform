@@ -153,6 +153,8 @@ h4 {
   display: none;
 }
 
+
+
 @media (display-mode: browser) {
   .app_installed {
     display: block;
