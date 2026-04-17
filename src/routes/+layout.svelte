@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onNavigate } from "$app/navigation";
+  import Header from "$components/layouts/header.svelte";
   import Meta from "$components/layouts/meta.svelte";
   import "$styles/app.css";
   import { Toaster } from "svelte-hot-french-toast";
@@ -23,6 +24,8 @@
 </script>
 
 <Meta />
+
+<Header />
 
 <main class="system">
   {@render children()}
