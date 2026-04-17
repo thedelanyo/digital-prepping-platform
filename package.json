@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx vite dev --host",
-    "drizzle": "drizzle-kit push --config=drizzle/turso.ts",
+    "drizzle": "drizzle-kit push --config=configs/turso.ts",
     "build": "wrangler types --check && vite build",
     "preview": "wrangler pages dev .svelte-kit/cloudflare --port 4173",
     "prepare": "svelte-kit sync || echo ''",
@@ -14,10 +14,14 @@
     "gen": "wrangler types"
   },
   "devDependencies": {
+    "@libsql/client": "^0.17.2",
     "@sveltejs/adapter-cloudflare": "^7.2.8",
     "@sveltejs/kit": "^2.57.0",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@types/node": "^25.6.0",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.2",
     "svelte": "^5.55.2",
     "svelte-check": "^4.4.6",
     "svelte-hot-french-toast": "^4.0.0",
