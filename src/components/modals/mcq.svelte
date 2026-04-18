@@ -1,5 +1,6 @@
 <script>
-  import { questions } from "$db/schema/preps";
+  import { prep } from "$db/schema/preps";
+  import { trimSpaces } from "$lib/helpers/text";
   import toast from "svelte-hot-french-toast";
   import Drawer from "./drawer.svelte";
 
@@ -29,12 +30,25 @@
       return;
     }
 
-    if ($questions.length >= max) {
+    if ($prep.questions.length >= max) {
       toast.error(`You can only add up to ${max} questions`);
       return;
     }
 
-    $questions = [...$questions, { title, answer_code, options }];
+    if (opts.some((option) => option.length > 100)) {
+      toast.error("One of the answers is too long");
+      return;
+    }
+
+    if (title.length > 300) {
+      toast.error("The question is too long");
+      return;
+    }
+
+    title = trimSpaces(title);
+    options = opts.map((option) => trimSpaces(option));
+
+    $prep.questions = [...$prep.questions, { title, answer_code, options }];
 
     toast.success("MCQ added");
 
@@ -42,11 +56,14 @@
     title = "";
     answer_code = 0;
 
-    toggle = $questions.length === max ? "" : toggle;
+    toggle = $prep.questions.length === max ? "" : toggle;
   };
 </script>
 
-<Drawer title="{$questions.length} MCQs added" onclose={() => (toggle = "")}>
+<Drawer
+  title="{$prep.questions.length} MCQs added"
+  onclose={() => (toggle = "")}
+>
   <form>
     <div>
       <label for="question">Enter a prep question</label>

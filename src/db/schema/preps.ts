@@ -15,6 +15,12 @@ export const prep_cards = sqliteTable("prep_cards", {
 
 export type PrepCards = typeof prep_cards.$inferSelect;
 
+type Question = {
+  title: string;
+  options: string[];
+  answer_code: number;
+};
+
 export const prepInit = {
   id: "",
   course_id: "",
@@ -22,14 +28,7 @@ export const prepInit = {
   creator_name: "",
   creator_id: "",
   topic: "",
+  questions: [] as Question[],
 };
 
 export const prep = writable(prepInit);
-
-type Question = {
-  title: string;
-  options: string[];
-  answer_code: number;
-};
-
-export const questions = writable<Question[]>([]);

@@ -2,7 +2,7 @@
   import Main from "$components/layouts/main.svelte";
   import MCQ from "$components/modals/mcq.svelte";
   import Svg from "$components/modals/svg.svelte";
-  import { prep, questions } from "$db/schema/preps.js";
+  import { prep } from "$db/schema/preps.js";
   import { courses } from "$lib/client/courses";
   import { arrowLeftIcons } from "$lib/client/icons.js";
   import { getLocalData, setLocalData } from "$lib/client/local.js";
@@ -25,20 +25,13 @@
       creator_name: creator.name,
     });
 
-    $questions = getLocalData("questions", []);
-
     $effect(() => {
       prep.subscribe((value) => {
         setLocalData("prep", value);
       });
 
-      questions.subscribe((value) => {
-        setLocalData("questions", value);
-      });
-
       return () => {
         localStorage.removeItem("prep");
-        localStorage.removeItem("questions");
       };
     });
   };
@@ -79,7 +72,7 @@
     </div>
 
     <button class="ghost" onclick={() => (toggle = "mcq")}>
-      add prep MCQs - ({$questions.length})
+      add prep MCQs - ({$prep.questions.length})
     </button>
 
     <div class="footer">
@@ -89,17 +82,7 @@
       </a>
 
       <form action="">
-        <input type="hidden" name="course_title" value={$prep.course_title} />
-        <input type="hidden" name="course_id" value={$prep.course_id} />
-        <input type="hidden" name="id" value={$prep.id} />
-        <input type="hidden" name="topic" value={$prep.topic} />
-        <input type="hidden" name="creator_id" value={$prep.creator_id} />
-        <input type="hidden" name="creator_name" value={$prep.creator_name} />
-        <input
-          type="hidden"
-          name="questions"
-          value={JSON.stringify(questions)}
-        />
+        <input type="hidden" name="prep" value={JSON.stringify($prep)} />
       </form>
 
       <button>preview</button>
