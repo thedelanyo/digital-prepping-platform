@@ -1,12 +1,14 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { prep } from "$db/schema/preps";
+  import { chevronLeftIcons, chevronRightIcons } from "$lib/client/icons";
   import { trimSpaces } from "$lib/helpers/text";
   import toast from "svelte-hot-french-toast";
-  import { fly, scale } from "svelte/transition";
+  import { fly } from "svelte/transition";
   import Drawer from "./drawer.svelte";
   import Hero from "./hero.svelte";
   import Spinner from "./spinner.svelte";
+  import Svg from "./svg.svelte";
 
   let {
     toggle = $bindable(""),
@@ -18,13 +20,9 @@
 
   const { questions } = $derived($prep);
 
-  let is_last = $derived.by(() => {
-    return step === questions.length;
-  });
-
   const stepper = (direction: "L" | "R") => {
     direction === "L" && step !== 1 && step--;
-    direction === "R" && !is_last && step++;
+    direction === "R" && step !== questions.length && step++;
   };
 
   type Listen = {
@@ -73,11 +71,6 @@
       </div>
     </div>
   {:else}
-    <h3>
-      <button class="ghost" onclick={() => (toggle = "")}>close</button>
-      <span> Review & Submit </span>
-    </h3>
-
     <form method="POST" use:enhance={submit}>
       <input type="hidden" name="prep" value={JSON.stringify($prep)} />
 
@@ -89,7 +82,8 @@
       {#key step}
         <div in:fly={{ x: -500 }}>
           <div class="info ghost">
-            Question: ({step}/{questions.length})
+            Question: ({step}/{questions.length}). Make sure you review and
+            correct any error.
           </div>
           <div>
             {#each questions as { title, options, answer_code }, index}
@@ -137,25 +131,21 @@
       {/key}
 
       <div class="flow-wide">
-        <button class="ghost" type="button" onclick={() => stepper("L")}>
-          previous
+        <button class="ghost" type="button" onclick={() => (toggle = "")}>
+          close
         </button>
 
-        {#if is_last}
-          <button in:scale>
-            <span>submit prep</span>
-            <Spinner {loading} />
-          </button>
-        {:else}
-          <button
-            in:scale
-            type="button"
-            class="ghost"
-            onclick={() => stepper("R")}
-          >
-            next
-          </button>
-        {/if}
+        <button class="ghost step" type="button" onclick={() => stepper("L")}>
+          <Svg ds={chevronLeftIcons} dimension="30" />
+        </button>
+        <button type="button" class="ghost step" onclick={() => stepper("R")}>
+          <Svg ds={chevronRightIcons} dimension="30" />
+        </button>
+
+        <button>
+          <span>submit</span>
+          <Spinner {loading} />
+        </button>
       </div>
     </form>
   {/if}
@@ -168,12 +158,21 @@
     padding: 1rem;
     gap: 1rem;
     justify-content: space-between;
-    height: 85vh;
-    margin-top: 3rem;
+    height: 90vh;
     font-size: 0.9rem;
 
     .flow-wide button {
       border-radius: 2rem;
+      padding-inline: var(--gap-nano);
+
+      &:last-child {
+        min-width: max-content;
+        padding-inline: var(--gap-base);
+      }
+
+      &.step {
+        width: 9rem;
+      }
     }
   }
 
@@ -189,28 +188,7 @@
   }
 
   .info.ghost {
-    width: max-content;
     padding-block: var(--gap-nano);
-  }
-
-  h3 {
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-    border-bottom: var(--border);
-    padding: var(--gap-micro) var(--gap-small);
-    position: fixed;
-    top: 0;
-    background-color: var(--bg-color);
-    z-index: 10;
-
-    button {
-      border-radius: 2rem;
-      font-size: 0.8rem;
-      padding: var(--gap-micro) var(--gap-base);
-    }
   }
 
   .done {
