@@ -1,6 +1,7 @@
 <script lang="ts">
   import Main from "$components/layouts/main.svelte";
   import MCQ from "$components/modals/mcq.svelte";
+  import Review from "$components/modals/review.svelte";
   import Svg from "$components/modals/svg.svelte";
   import { prep } from "$db/schema/preps.js";
   import { courses } from "$lib/client/courses";
@@ -16,6 +17,7 @@
   let topics = $derived(getTopics($prep.course_id));
 
   let toggle = $state("");
+  let step = $state(1);
 
   const load = (_: any) => {
     $prep = getLocalData("prep", {
@@ -81,17 +83,22 @@
         <span>back</span>
       </a>
 
-      <form action="">
-        <input type="hidden" name="prep" value={JSON.stringify($prep)} />
-      </form>
-
-      <button>preview</button>
+      <button
+        onclick={() => (toggle = "review")}
+        disabled={$prep.questions.length < 10}
+      >
+        review
+      </button>
     </div>
   </section>
 </Main>
 
 {#if toggle === "mcq"}
   <MCQ bind:toggle />
+{/if}
+
+{#if toggle === "review"}
+  <Review bind:toggle bind:step />
 {/if}
 
 <style>
@@ -112,7 +119,7 @@
 
     button,
     a {
-      padding: var(--gap-micro) var(--gap-base);
+      padding: var(--gap-micro) 1.5rem;
       border-radius: 2rem;
       font-size: 0.8rem;
       text-transform: uppercase;

@@ -6,5 +6,5 @@ export const topics = [
   { course_id: "019d9a75", title: "Error Handling" },
   { course_id: "019d9a75", title: "Digital Transmission" },
   { course_id: "019d9a75", title: "Routing" },
-  { course_id: "019d9a75", title: "IP Addressing" },
+  { course_id: "019d9a75", title: "Addressing" },
 ];

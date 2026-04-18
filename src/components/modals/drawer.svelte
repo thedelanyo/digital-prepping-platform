@@ -1,14 +1,12 @@
 <script lang="ts">
   import Close from "$components/buttons/close.svelte";
-
-  import { fade, slide } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
 
   let {
     tag = "div",
     tall = true,
     title = "",
     top = false,
-    bottom = "0",
     children,
     onclose = null,
     size = "1.3",
@@ -25,10 +23,9 @@
 <div class="drawer" {onclick} transition:fade>
   <div
     class:noTitle={!title}
-    style:bottom
-    class="wrapper"
     class:top
-    transition:slide
+    class="wrapper"
+    transition:fly={{ y: 800, duration: 500 }}
   >
     {#if title}
       <div title="head" style="font-size: {size}rem;">
@@ -66,9 +63,14 @@
     position: fixed;
     right: 0;
     left: 0;
+    bottom: 0;
     overflow-y: scroll;
     background-color: var(--bg-color);
     border-radius: 0.5rem 0.5rem 0 0;
+
+    &.top {
+      top: 0;
+    }
 
     &.noTitle {
       border-top: var(--border);
