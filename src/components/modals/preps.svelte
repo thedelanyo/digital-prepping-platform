@@ -2,6 +2,7 @@
   type Preps = {
     id: string;
     creator_name: string;
+    creator_id: string;
     question: string;
   };
 
@@ -9,8 +10,10 @@
 </script>
 
 <div class="preps">
-  {#each preps as { id, creator_name, question }}
-    <a href="/prep-{id}">{question}</a>
+  {#each preps as { id, question, creator_name, creator_id }}
+    {@const [, prepId] = id.split(":")}
+    {@const creator = `${creator_id}:${creator_name}`}
+    <a href="/app/prep-{prepId}?creator={creator}">{question}</a>
   {/each}
 </div>
 

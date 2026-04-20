@@ -14,6 +14,7 @@ export const getPreps = async (data?: Params) => {
   const selectors = {
     id: table.id,
     creator_name: table.creator_name,
+    creator_id: table.creator_id,
     question: table.question,
   };
 
@@ -30,6 +31,21 @@ export const getPreps = async (data?: Params) => {
       .where(and(like(table.id, `0:%`), queries))
       .orderBy(sql`RANDOM()`)
       .limit(pageSize);
+
+    return results;
+  } catch (e: any) {
+    console.log({ message: e.message });
+
+    return [];
+  }
+};
+
+export const getPrep = async (id: string) => {
+  try {
+    const results = await db
+      .select()
+      .from(table)
+      .where(like(table.id, `%:${id}`));
 
     return results;
   } catch (e: any) {
