@@ -4,14 +4,16 @@
   import Main from "$components/layouts/main.svelte";
   import Scorecard from "$components/modals/scorecard.svelte";
   import Svg from "$components/modals/svg.svelte";
+  import { getPreplet, savePreplet } from "$db/connections/dexie.js";
   import { preplet } from "$db/schema/preps.js";
   import { chevronLeftIcons, chevronRightIcons } from "$lib/client/icons.js";
-  import { getLocalData, setLocalData } from "$lib/client/local.js";
+  import { onMount } from "svelte";
   import toast from "svelte-hot-french-toast";
   import { fly } from "svelte/transition";
 
   let { data } = $props();
 
+  let { id } = $derived(data);
   let current = $state(parseInt(page.url.searchParams.get("current") || "1"));
   let item = $derived($preplet.preps.find(({ stage }) => stage === current));
   let selection = $derived<number | null>(item ? item.selection : null);
@@ -46,23 +48,21 @@
     });
   };
 
+  onMount(async () => {
+    $preplet = await getPreplet(id);
+  });
+
   const load = (_: any) => {
-    $preplet = getLocalData("preplet", $preplet);
-
     $effect(() => {
-      preplet.subscribe((value) => {
-        setLocalData("preplet", value);
+      preplet.subscribe(async (value) => {
+        await savePreplet(value);
       });
-
-      return () => {
-        localStorage.removeItem("preplet");
-      };
     });
   };
 </script>
 
 <Main>
-  <section use:load>
+  <section {@attach load}>
     {#each data.preps as { question, options, answer_code }, i}
       {@const index = i + 1}
 

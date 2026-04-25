@@ -1,3 +1,4 @@
+import { prepletInit } from "$db/connections/dexie";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { writable } from "svelte/store";
 
@@ -31,13 +32,5 @@ export const prepInit = {
 
 export type Prep = typeof prepInit;
 
-type Preplet = {
-  preps: { stage: number; selection: number }[];
-  score: { totalCorrect: number; totalWrong: number };
-};
-
 export const prep = writable(prepInit);
-export const preplet = writable<Preplet>({
-  preps: [],
-  score: { totalCorrect: 0, totalWrong: 0 },
-});
+export const preplet = writable(prepletInit);
