@@ -3,9 +3,8 @@
   import { site } from "$lib/client/site";
   import { onMount } from "svelte";
 
-  let meta = $derived(page.data.meta || site);
-
-  let { description, title } = $derived(meta);
+  let title = $derived(page.data.meta?.title || site.title);
+  let description = $derived(page.data.meta?.description || site.description);
 
   let { url, origin } = $derived.by(() => {
     const { origin } = page.url;
@@ -15,7 +14,7 @@
   });
 
   let imageSrc = $derived.by(() => {
-    const { image } = meta;
+    let image = page.data.meta?.image || site.image;
     const src = image.startsWith("/") ? image : `/${image}`;
     return image.startsWith("http") ? image : `${origin}${src}`;
   });

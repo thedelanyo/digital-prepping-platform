@@ -22,7 +22,7 @@ export const load = async ({ url }) => {
 
   const title = search || getCourseTitle(groupId) || preps[0].creatorName;
 
-  console.log({ title });
+  const meta = { title, image: `/courses/${courseId}.webp` };
 
-  return { title, preps };
+  return { title, preps, meta };
 };
