@@ -63,7 +63,7 @@ export const actions = {
     }
 
     for (const { question, answer_code, options } of preps) {
-      if (question.length > 100) {
+      if (question.length > 150) {
         message = "A question cannot be longer 100 chars";
         return fail(400, { message, state });
       }
