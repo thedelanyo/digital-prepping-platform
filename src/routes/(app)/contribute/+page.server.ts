@@ -30,7 +30,7 @@ export const actions = {
     }
 
     if (!topics.length) {
-      message = "Topic is required";
+      message = "At least one topic is required";
       return fail(400, { message, state });
     }
 

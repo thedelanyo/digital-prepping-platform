@@ -4,6 +4,7 @@
   import MCQ from "$components/modals/mcq.svelte";
   import Review from "$components/modals/review.svelte";
   import Svg from "$components/modals/svg.svelte";
+  import Topics from "$components/modals/topics.svelte";
   import { prep } from "$db/schema/preps.js";
   import { courses } from "$lib/client/courses";
   import { arrowLeftIcons, pencilIcons } from "$lib/client/icons.js";
@@ -83,6 +84,8 @@
       <span>add prep MCQs - ({$prep.questions.length})</span>
     </button>
 
+    <Topics />
+
     <div class="footer">
       <a href="/" class="ghost">
         <Svg ds={arrowLeftIcons} dimension="25" />
@@ -126,6 +129,7 @@
     right: 0;
     border-top: var(--border);
     padding: var(--gap-smallest);
+    background-color: var(--bg-color);
 
     button,
     a {
