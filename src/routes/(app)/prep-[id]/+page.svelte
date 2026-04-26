@@ -128,6 +128,10 @@
 </Main>
 
 <style>
+  section {
+    margin-bottom: 2rem;
+  }
+
   .prep {
     margin-top: -1rem;
     gap: 3rem;
@@ -165,6 +169,7 @@
     justify-content: space-between;
     padding: var(--gap-smallest);
     border-top: var(--border);
+    background-color: var(--bg-color);
 
     button,
     .ghost {
