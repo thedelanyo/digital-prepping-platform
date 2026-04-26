@@ -99,12 +99,4 @@
   .content {
     max-height: 45rem;
   }
-
-  @media (min-width: 50em) {
-    .wrapper {
-      left: 50%;
-      transform: translateX(-50%);
-      width: 40rem;
-    }
-  }
 </style>

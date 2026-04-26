@@ -2,12 +2,9 @@
   import Svg from "$components/modals/svg.svelte";
   import { hamburgerIcons } from "$lib/client/icons";
   //   import { downloadIcon, plusIcon } from "$lib/client/icons";
-  import { dev } from "$app/environment";
   import { onMount } from "svelte";
   import Head from "./head.svelte";
-  //   import Logo from "./logo.svelte";
-  //   import Nav from "./nav.svelte";
-  //   import Shortcut from "./shortcuts.svelte";
+  import Nav from "./nav.svelte";
 
   interface PromptEvent extends Event {
     prompt: () => void;
@@ -40,13 +37,16 @@
 </script>
 
 <Head>
-  <button class="ghost">
+  <button class="ghost" onclick={() => (is_open = true)}>
     <Svg ds={hamburgerIcons} />
   </button>
-  {#if dev}
-    <a class="button" href="/contribute">contribute</a>
-  {/if}
+
+  <a class="button" href="/contribute">contribute</a>
 </Head>
+
+{#if is_open}
+  <Nav bind:is_open />
+{/if}
 
 <style>
   button,

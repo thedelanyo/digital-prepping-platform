@@ -82,11 +82,6 @@
     <form method="POST" use:enhance={submit}>
       <input type="hidden" name="prep" value={JSON.stringify($prep)} />
 
-      <div class="course">
-        <div class="ghost">{$prep.course_title || "No course selected"}</div>
-        <div class="ghost">{$prep.topic || "No topic selected"}</div>
-      </div>
-
       {#key step}
         <div in:fly={{ x: -500 }}>
           <div class="info ghost">
@@ -182,10 +177,6 @@
         width: 9rem;
       }
     }
-  }
-
-  .course .ghost {
-    justify-content: start;
   }
 
   .options {

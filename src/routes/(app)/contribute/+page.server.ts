@@ -1,12 +1,12 @@
 import { tursoDB as db } from "$db/connections/turso.js";
 import type { Prep } from "$db/schema/preps";
 import { prepTable as table } from "$db/schema/preps";
-import { generateId } from "$lib/helpers/id";
 import { trimSpaces } from "$lib/helpers/text.js";
+import { getCreator } from "$lib/server/creator.js";
 import { fail } from "@sveltejs/kit";
 
-export const load = async () => {
-  const creator = { name: "Delator Agbenyo", id: generateId() };
+export const load = async ({ cookies }) => {
+  const creator = getCreator(cookies);
 
   return { creator };
 };

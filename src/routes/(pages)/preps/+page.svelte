@@ -2,7 +2,6 @@
   import Preps from "$components/modals/preps.svelte";
 
   let { data } = $props();
-
   let { title, preps } = $derived(data);
 </script>
 
