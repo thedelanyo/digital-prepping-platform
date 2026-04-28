@@ -2,6 +2,7 @@
   import Svg from "$components/modals/svg.svelte";
   import { hamburgerIcons } from "$lib/client/icons";
   //   import { downloadIcon, plusIcon } from "$lib/client/icons";
+  import { dev } from "$app/environment";
   import { onMount } from "svelte";
   import Head from "./head.svelte";
   import Nav from "./nav.svelte";
@@ -41,7 +42,9 @@
     <Svg ds={hamburgerIcons} />
   </button>
 
-  <a class="button" href="/contribute">contribute</a>
+  {#if dev}
+    <a class="button" href="/contribute">contribute</a>
+  {/if}
 </Head>
 
 {#if is_open}
