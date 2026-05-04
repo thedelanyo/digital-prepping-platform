@@ -14,7 +14,7 @@
     toggle = $bindable(""),
     step = $bindable(1),
     loading = false,
-    success = false,
+    id = "",
     submit = null,
   } = $props();
 
@@ -57,7 +57,7 @@
 </script>
 
 <Drawer top>
-  {#if success}
+  {#if id}
     <div class="done" in:fly={{ x: -500 }}>
       <Hero size="13" />
 
@@ -68,7 +68,7 @@
       <div class="flow-wide">
         <button class="ghost" onclick={resubmit}>submit again</button>
         <a
-          href="/prep-{$prep.id}"
+          href="/prep-{id}"
           class="button"
           onclick={() => {
             localStorage.removeItem("prep");

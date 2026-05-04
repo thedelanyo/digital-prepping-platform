@@ -18,7 +18,7 @@
   let toggle = $state("");
   let loading = $state(false);
   let step = $state(1);
-  let success = $state(false);
+  let id = $state("");
 
   const load = (_: any) => {
     $prep = getLocalData("prep", { ...$prep, id: generateId() });
@@ -48,7 +48,7 @@
       await applyAction(result);
 
       form?.message && toast[form.state](form.message);
-      success = form?.state === "success";
+      id = form?.id || "";
       loading = false;
     };
   };
@@ -100,7 +100,7 @@
 {/if}
 
 {#if toggle === "review"}
-  <Review bind:toggle bind:step {submit} {loading} {success} />
+  <Review bind:toggle bind:step {submit} {loading} {id} />
 {/if}
 
 <style>

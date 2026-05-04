@@ -90,7 +90,7 @@ export const actions = {
 
       state = "success";
 
-      return { state, message };
+      return { state, message, id };
     } catch (e: any) {
       console.log(e.message);
       return { state, message: "Internal Error" };

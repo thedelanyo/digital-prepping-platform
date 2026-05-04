@@ -1,7 +1,7 @@
 import { PUBLIC_DEXIE_DB_NAME } from "$env/static/public";
 import Dexie from "dexie";
 
-type Prep = { stage: number; selection: number };
+type Prep = { stage: number; selected: number; answer: number };
 
 export const prepletInit = {
   id: "",

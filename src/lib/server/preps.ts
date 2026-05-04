@@ -48,10 +48,15 @@ export const getPrep = async (id: string) => {
       .from(table)
       .where(like(table.id, `%:${id}`));
 
-    return results;
+    if (!results) return { preps: [], answers: [] };
+
+    const answers = results.map((result) => result.answer_code);
+    const preps = results.map(({ answer_code, ...rest }) => rest);
+
+    return { preps, answers };
   } catch (e: any) {
     console.log({ message: e.message });
 
-    return [];
+    return { preps: [], answers: [] };
   }
 };

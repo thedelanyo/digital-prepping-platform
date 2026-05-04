@@ -1,56 +1,56 @@
 <script lang="ts">
-  import { replaceState } from "$app/navigation";
-  import { page } from "$app/state";
+  import { applyAction, enhance } from "$app/forms";
   import Main from "$components/layouts/main.svelte";
   import Scorecard from "$components/modals/scorecard.svelte";
   import Svg from "$components/modals/svg.svelte";
   import { getPreplet, savePreplet } from "$db/connections/dexie.js";
   import { preplet } from "$db/schema/preps.js";
   import { chevronLeftIcons, chevronRightIcons } from "$lib/client/icons.js";
+  import type { SubmitFunction } from "@sveltejs/kit";
   import { onMount } from "svelte";
   import toast from "svelte-hot-french-toast";
   import { fly } from "svelte/transition";
 
-  let { data } = $props();
+  let { data, form } = $props();
 
-  let { id } = $derived(data);
-  let current = $state(parseInt(page.url.searchParams.get("current") || "1"));
-  let item = $derived($preplet.preps.find(({ stage }) => stage === current));
-  let selection = $derived<number | null>(item ? item.selection : null);
+  let { id, stage } = $derived(data);
+
+  let prep = $derived($preplet.preps.find((p) => p.stage === stage));
+  let selected = $derived<number | null>(prep ? prep.selected : null);
   let length = $derived(data.preps.length + 1);
-
-  const step = (direction: "L" | "R") => {
-    if (direction === "R" && !item) {
-      toast.info("Question not answered.");
-      return;
-    }
-
-    direction === "L" && current !== 1 && current--;
-    direction === "R" && current !== length && current++;
-
-    replaceState(`?current=${current}`, {});
-  };
-
-  const submit = (index: number, answer_code: number) => {
-    selection = index;
-
-    const success = index === answer_code && selection === answer_code;
-
-    success ? toast.success("That's right!") : toast.error("Not quite");
-
-    $preplet.preps = [...$preplet.preps, { stage: current, selection }];
-
-    preplet.update((prep) => {
-      success && prep.score.totalCorrect++;
-      !success && prep.score.totalWrong++;
-
-      return { ...prep };
-    });
-  };
+  let direction = $derived("L");
+  let answered = $derived(prep ? "YES" : "NO");
 
   onMount(async () => {
     $preplet = await getPreplet(id);
   });
+
+  const submit: SubmitFunction = () => {
+    return async ({ result }) => {
+      await applyAction(result);
+
+      form?.message && toast[form.state](form.message);
+      stage = form?.stage || stage;
+      direction = form?.direction || direction;
+
+      if (selected !== null && form?.answer !== undefined) {
+        prep = { stage, selected, answer: form.answer };
+
+        const success = selected === prep.answer;
+
+        success ? toast.success("That's right!") : toast.error("Not quite");
+
+        const preps = [...$preplet.preps, prep];
+
+        preplet.update((prep) => {
+          success && prep.score.totalCorrect++;
+          !success && prep.score.totalWrong++;
+
+          return { ...prep, preps };
+        });
+      }
+    };
+  };
 
   const load = (_: any) => {
     $effect(() => {
@@ -63,10 +63,10 @@
 
 <Main>
   <section {@attach load}>
-    {#each data.preps as { question, options, answer_code }, i}
-      {@const index = i + 1}
+    {#each data.preps as { question, options }, prepIndex}
+      {@const index = prepIndex + 1}
 
-      {#if index === current}
+      {#if index === stage}
         <div class="prep" in:fly={{ x: -500 }}>
           <div class="question">
             <div>
@@ -78,53 +78,73 @@
             </p>
           </div>
 
-          <div class="options">
+          <form
+            class="options"
+            method="POST"
+            use:enhance={submit}
+            action="?/getAnswer"
+          >
+            <input type="hidden" name="stage" value={stage} />
+            <input type="hidden" name="answered" value={answered} />
+
             {#each options as option, i}
-              {@const ans = i === answer_code && selection === answer_code}
-              {@const success = i === answer_code && selection !== null}
-              {@const danger = i !== answer_code && selection === i}
-              {@const disabled = selection !== null}
-              {@const checked = selection === i}
-              <label
-                class="radio"
-                for="opt_{i}"
-                class:success
-                class:ans
-                class:danger
-              >
-                <input
-                  {checked}
-                  {disabled}
-                  type="radio"
-                  id="opt_{i}"
-                  name="option"
-                  onclick={() => submit(i, answer_code)}
-                />
-                <span>{option}</span>
-              </label>
+              {@const answer = prep?.answer}
+              {@const ans = i === answer && selected === answer}
+              {@const success = i === answer && selected !== null}
+              {@const danger = i !== answer && selected === i}
+              {@const checked = selected === i}
+              {@const disabled = answered === "YES"}
+
+              <button onclick={() => (selected = i)} {disabled}>
+                <label
+                  class="radio"
+                  for="opt_{i}"
+                  class:success
+                  class:ans
+                  class:danger
+                >
+                  <input
+                    {disabled}
+                    {checked}
+                    type="radio"
+                    id="opt_{i}"
+                    name="option"
+                  />
+                  <span>{option}</span>
+                </label>
+              </button>
             {/each}
-          </div>
+          </form>
         </div>
       {/if}
     {/each}
 
-    {#if current === length}
+    {#if stage === length}
       <Scorecard />
     {/if}
   </section>
 
-  <div class="footer">
-    <button class="ghost" onclick={() => history.back()}>return</button>
+  <form class="footer" method="POST" use:enhance={submit} action="?/stepper">
+    <button class="ghost" onclick={() => history.back()} type="button">
+      return
+    </button>
+
+    <input type="hidden" name="answered" value={answered} />
+    <input type="hidden" name="direction" value={direction} />
+    <input type="hidden" name="stage" value={stage} />
+    <input type="hidden" name="length" value={length} />
+    <input type="hidden" name="id" value={id} />
 
     <div>
-      <button class="ghost step" type="button" onclick={() => step("L")}>
+      <button class="ghost step">
         <Svg ds={chevronLeftIcons} dimension="30" />
       </button>
-      <button type="button" class="ghost step" onclick={() => step("R")}>
+
+      <button class="ghost step" onclick={() => (direction = "R")}>
         <Svg ds={chevronRightIcons} dimension="30" />
       </button>
     </div>
-  </div>
+  </form>
 </Main>
 
 <style>
@@ -166,20 +186,24 @@
     right: 0;
     left: 0;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     padding: var(--gap-smallest);
     border-top: var(--border);
     background-color: var(--bg-color);
 
-    button,
-    .ghost {
-      font-size: 0.9rem;
-      padding: var(--gap-micro) var(--gap-small);
-    }
-
     div {
       display: flex;
+      flex-direction: row;
       gap: 2rem;
+
+      .ghost {
+        width: 3.5rem;
+      }
+    }
+
+    .ghost {
+      padding: var(--gap-micro) var(--gap-small);
     }
   }
 
@@ -188,5 +212,11 @@
     background-color: var(--success-bg);
     border: var(--border);
     border-color: var(--success-color);
+  }
+
+  form.options {
+    button {
+      display: contents;
+    }
   }
 </style>
