@@ -5,12 +5,15 @@
     "CISC",
     "Coprep",
     "dexie",
+    "genai",
+    "Groq",
     "ilike",
     "libsql",
     "preplet",
     "preplets",
     "preppings",
     "SDLC",
-    "turso"
+    "turso",
+    "unpdf"
   ]
 }
