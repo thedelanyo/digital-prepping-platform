@@ -1,7 +1,4 @@
-import { randomItem } from "$lib/helpers/arrays";
 import { generateId } from "$lib/helpers/id.js";
-import { generateWithGemini } from "$lib/server/ai/gemini";
-import { generateWithGroq } from "$lib/server/ai/groq.js";
 import { pdfExtraction } from "$lib/server/ai/helpers.js";
 import { fail } from "@sveltejs/kit";
 
@@ -40,14 +37,14 @@ export const actions = {
         return fail(400, { message, state });
       }
 
-      const model = randomItem([generateWithGemini, generateWithGroq]);
+      // const model = randomItem([generateWithGemini, generateWithGroq]);
 
-      const questions = await model(text, courseTitle);
+      // const questions = await model(text, courseTitle);
 
-      const prep = { id, courseId, courseTitle, questions };
+      // const prep = { id, courseId, courseTitle, questions };
 
       state = "success";
-      return { state, message, prep };
+      return { state, message };
     } catch (e: any) {
       console.log(e.message);
       return { state, message: "Internal Error" };
