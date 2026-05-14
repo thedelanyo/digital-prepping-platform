@@ -1,4 +1,5 @@
 import { generateId } from "$lib/helpers/id.js";
+import { generateWithGemini } from "$lib/server/ai/gemini";
 import { pdfExtraction } from "$lib/server/ai/helpers.js";
 import { fail } from "@sveltejs/kit";
 
@@ -39,12 +40,12 @@ export const actions = {
 
       // const model = randomItem([generateWithGemini, generateWithGroq]);
 
-      // const questions = await model(text, courseTitle);
+      const questions = await generateWithGemini(text, courseTitle);
 
-      // const prep = { id, courseId, courseTitle, questions };
+      const prep = { id, courseId, courseTitle, questions };
 
       state = "success";
-      return { state, message };
+      return { state, message, prep };
     } catch (e: any) {
       console.log(e.message);
       return { state, message: "Internal Error" };
