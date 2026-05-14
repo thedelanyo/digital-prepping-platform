@@ -1,5 +1,6 @@
 import { aiPrepSchema } from "$db/schema/preps";
-import { GEMINI_API_KEY as apiKey } from "$env/static/private";
+import { GEMINI_API_KEYS } from "$env/static/private";
+import { randomItem } from "$lib/helpers/arrays";
 import { GoogleGenAI } from "@google/genai";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { cleanJson, getContent, getSystemPrompt } from "./helpers";
@@ -7,6 +8,8 @@ import { cleanJson, getContent, getSystemPrompt } from "./helpers";
 export const generateWithGemini = async (text: string, course: string) => {
   try {
     const schema = aiPrepSchema;
+
+    const apiKey = randomItem(GEMINI_API_KEYS.split(";"));
 
     const ai = new GoogleGenAI({ apiKey });
 

@@ -38,8 +38,6 @@ export const actions = {
         return fail(400, { message, state });
       }
 
-      // const model = randomItem([generateWithGemini, generateWithGroq]);
-
       const questions = await generateWithGemini(text, courseTitle);
 
       const prep = { id, courseId, courseTitle, questions };
