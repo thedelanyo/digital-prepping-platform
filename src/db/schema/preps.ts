@@ -1,29 +1,38 @@
 import { prepletInit } from "$db/connections/dexie";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { writable } from "svelte/store";
+import { z } from "zod";
+
+const questionSchema = z.object({
+  title: z.string().trim(),
+  options: z.array(z.string()).min(2).max(3),
+  topics: z.array(z.string()).min(1).max(3),
+  answerIndex: z.number().int().nonnegative().min(0).max(2),
+  explanation: z.string().trim(),
+});
+
+export const aiPrepSchema = z.object({
+  questions: z.array(questionSchema),
+});
+
+type Question = z.infer<typeof questionSchema>;
 
 export const prepTable = sqliteTable("preps", {
   id: text("id", "").primaryKey(),
-  course_id: text("course_id").default("").notNull(),
-  course_title: text("course_title").default("").notNull(),
-  question: text("question").default("").notNull(),
+  courseId: text("course_id").default("").notNull(),
+  courseTitle: text("course_title").default("").notNull(),
+  title: text("title").default("").notNull(),
   options: text("options", { mode: "json" }).$type<string[]>().notNull(),
-  answer_code: integer("answer_code").default(0).notNull(),
+  answerIndex: integer("answer_index").default(0).notNull(),
   topics: text("topics").default("").notNull(),
-  creator_name: text("creator_name").default("").notNull(),
-  creator_id: text("creator_id").default("").notNull(),
+  creatorName: text("creator_name").default("").notNull(),
+  creatorId: text("creator_id").default("").notNull(),
 });
 
-type Question = {
-  title: string;
-  options: string[];
-  answer_code: number;
-};
-
 export const prepInit = {
-  course_id: "",
-  course_title: "",
-  topics: [] as string[],
+  id: "",
+  courseId: "",
+  courseTitle: "",
   questions: [] as Question[],
 };
 

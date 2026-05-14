@@ -1,12 +1,11 @@
+import { aiPrepSchema } from "$db/schema/preps";
 import { GROQ_AI_API_KEY as apiKey } from "$env/static/private";
 import Groq from "groq-sdk";
-import { cleanJson, getContent, SYSTEM_PROMPT } from "./helpers";
-import { aiPrepSchema } from "./types";
+import { cleanJson, getContent, getSystemPrompt } from "./helpers";
 
-export const GroqAiPreps = async (text: string) => {
+export const generateWithGroq = async (text: string, course: string) => {
   try {
     const schema = aiPrepSchema;
-
     const groq = new Groq({ apiKey });
 
     const completion = await groq.chat.completions.create({
@@ -15,7 +14,7 @@ export const GroqAiPreps = async (text: string) => {
       temperature: 0.3,
 
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: getSystemPrompt(course) },
         { role: "user", content: getContent(text) },
       ],
     });

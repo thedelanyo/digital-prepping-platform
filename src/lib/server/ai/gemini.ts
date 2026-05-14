@@ -1,21 +1,21 @@
+import { aiPrepSchema } from "$db/schema/preps";
 import { GEMINI_API_KEY as apiKey } from "$env/static/private";
 import { GoogleGenAI } from "@google/genai";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { cleanJson, getContent, SYSTEM_PROMPT } from "./helpers";
-import { aiPrepSchema } from "./types";
+import { cleanJson, getContent, getSystemPrompt } from "./helpers";
 
-export const generateWithGemini = async (text: string) => {
-  const schema = aiPrepSchema;
-
-  const ai = new GoogleGenAI({ apiKey });
-
-  const config = {
-    systemInstruction: SYSTEM_PROMPT,
-    responseMimeType: "application/json",
-    responseSchema: zodToJsonSchema(schema),
-  };
-
+export const generateWithGemini = async (text: string, course: string) => {
   try {
+    const schema = aiPrepSchema;
+
+    const ai = new GoogleGenAI({ apiKey });
+
+    const config = {
+      systemInstruction: getSystemPrompt(course),
+      responseMimeType: "application/json",
+      responseSchema: zodToJsonSchema(schema),
+    };
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       config,

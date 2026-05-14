@@ -214,9 +214,7 @@ button,
   text-transform: capitalize;
 }
 
-form button:not(.inline-control button) {
-  width: 100%;
-}
+
 
 button,
 .button,

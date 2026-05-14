@@ -2,9 +2,11 @@
   import Svg from "$components/modals/svg.svelte";
   import { hamburgerIcons } from "$lib/client/icons";
   //   import { downloadIcon, plusIcon } from "$lib/client/icons";
-  import { dev } from "$app/environment";
+  import { page } from "$app/state";
   import { onMount } from "svelte";
+  import { scale } from "svelte/transition";
   import Head from "./head.svelte";
+  import Logo from "./logo.svelte";
   import Nav from "./nav.svelte";
 
   interface PromptEvent extends Event {
@@ -38,13 +40,20 @@
 </script>
 
 <Head>
-  <button class="ghost" onclick={() => (is_open = true)}>
-    <Svg ds={hamburgerIcons} />
-  </button>
+  <a href="/">
+    <Logo size="33" />
+    coprep
+  </a>
 
-  {#if dev}
-    <a class="button" href="/contribute">contribute</a>
-  {/if}
+  <div>
+    {#if page.url.pathname !== "/create"}
+      <a href="/create" class="button" transition:scale>create</a>
+    {/if}
+
+    <button class="ghost" onclick={() => (is_open = true)}>
+      <Svg ds={hamburgerIcons} />
+    </button>
+  </div>
 </Head>
 
 {#if is_open}
@@ -52,16 +61,30 @@
 {/if}
 
 <style>
-  button,
-  a {
-    padding: var(--gap-micro) var(--gap-small);
-    border-radius: 2rem;
-    font-size: 0.8rem;
+  a:not(.button) {
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    color: currentColor;
+    font-size: 1.2rem;
+    gap: 0.5rem;
+  }
 
-    &.ghost {
-      padding: var(--gap-nano);
-      border-radius: var(--radius-base);
-    }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .ghost {
+    padding: var(--gap-nano);
+    border-radius: var(--radius-large);
+  }
+
+  .button {
+    padding-block: var(--gap-nano);
+    border-radius: 2rem;
+    text-transform: uppercase;
+    font-size: 0.8rem;
   }
 </style>

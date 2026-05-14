@@ -4,3 +4,9 @@ export const shuffle = <T>(items: T[]) => {
     .sort((a, b) => a.sort - b.sort)
     .map((a) => a.value);
 };
+
+export const randomItem = <T>(items: T[]) => {
+  let pos = Math.floor(Math.random() * items.length);
+
+  return items[pos];
+};
