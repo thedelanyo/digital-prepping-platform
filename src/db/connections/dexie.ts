@@ -11,17 +11,30 @@ export const prepletInit = {
 
 type Preplet = typeof prepletInit;
 
+export type LocalPrep = {
+  id: string;
+  title: string;
+  options: string[];
+  answerIndex: number;
+  courseId: string;
+  courseTitle: string;
+  topics: string;
+  groupId: string;
+};
+
 const dexieDB = new Dexie(PUBLIC_DEXIE_DB_NAME);
 
 dexieDB.version(1).stores({
   preplets: "id",
+  preps: "id, courseId, groupId",
 });
 
-const table = dexieDB.table<Preplet, string>("preplets");
+export const prepletTable = dexieDB.table<Preplet, string>("preplets");
+export const localPrepTable = dexieDB.table<LocalPrep, string>("preps");
 
 export const savePreplet = async (preplet: Preplet) => {
   try {
-    await table.put(preplet);
+    await prepletTable.put(preplet);
   } catch (error: any) {
     console.error({ message: error.message });
   }
@@ -29,7 +42,7 @@ export const savePreplet = async (preplet: Preplet) => {
 
 export const getPreplet = async (id: string) => {
   try {
-    const record = await table.get(id);
+    const record = await prepletTable.get(id);
 
     return record || { ...prepletInit, id };
   } catch (error: any) {

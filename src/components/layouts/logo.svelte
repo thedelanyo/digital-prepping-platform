@@ -1,5 +1,5 @@
 <script>
-  let { size = "30", color = "currentColor" } = $props();
+  let { size = "35", color = "currentColor" } = $props();
 </script>
 
 <div aria-label="Logo">
@@ -10,8 +10,8 @@
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="122" cy="122" r="116" stroke={color} stroke-width="12" />
-    <circle cx="122" cy="122" r="74.5" fill={color} stroke={color} />
+    <circle cx="122" cy="122" r="110" stroke={color} stroke-width="15" />
+    <circle cx="122" cy="122" r="60" fill={color} stroke={color} />
   </svg>
 </div>
 

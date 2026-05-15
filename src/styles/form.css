@@ -23,7 +23,7 @@ form > div {
 input,
 textarea,
 select {
-  padding: var(--gap-micro) var(--gap-small);
+  padding: var(--gap-smallest) var(--gap-small);
   border-radius: var(--radius-medium);
   display: block;
   background-color: inherit;
@@ -148,7 +148,6 @@ textarea::-webkit-scrollbar-thumb {
   padding: var(--gap-base);
   border-radius: var(--radius-base);
   gap: var(--gap-smallest);
-  justify-content: space-between;
   font-size: 1rem;
   border: var(--border);
 }

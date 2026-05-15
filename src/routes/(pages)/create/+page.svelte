@@ -1,13 +1,13 @@
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms";
   import Callout from "$components/modals/callout.svelte";
+  import Review from "$components/modals/review.svelte";
   import Spinner from "$components/modals/spinner.svelte";
   import Svg from "$components/modals/svg.svelte";
   import { prep } from "$db/schema/preps.js";
   import { courses } from "$lib/client/courses";
   import { arrowLeftIcons, uploadIcons } from "$lib/client/icons.js";
-  import { getLocalData, setLocalData } from "$lib/client/local.js";
-  import { generateId } from "$lib/helpers/id.js";
+  import { getTextbooks } from "$lib/client/topic.js";
   import { truncateString } from "$lib/helpers/text.js";
   import type { SubmitFunction } from "@sveltejs/kit";
   import toast from "svelte-hot-french-toast";
@@ -16,24 +16,14 @@
   let { form } = $props();
 
   let loading = $state(false);
-  let title = $state("");
+  let course = $state({ title: "", id: "", textbookName: "", textbookId: "" });
   let ds = $state(uploadIcons);
+  let toAddBio = $state(false);
+  let publishId = $state("");
   let files = $state<FileList | null>(null);
   let filename = $derived(files ? files[0].name : "");
-
-  const load = (_: any) => {
-    $prep = getLocalData("prep", { ...$prep, id: generateId() });
-
-    $effect(() => {
-      prep.subscribe((value) => {
-        setLocalData("prep", value);
-      });
-
-      return () => {
-        localStorage.removeItem("prep");
-      };
-    });
-  };
+  let textbooks = $derived(getTextbooks($prep.courseId));
+  let locked = $derived(!!course.textbookId);
 
   const submit: SubmitFunction = () => {
     if (loading) return;
@@ -45,66 +35,110 @@
 
       form?.message && toast[form.state](form.message);
       $prep = form?.prep || $prep;
-
+      publishId = form?.publishId || publishId;
       loading = false;
     };
   };
+
+  const onchange = (which: "course" | "textbook") => {
+    if (which === "course") {
+      const item = courses.find((c) => c.id == course.id);
+      course.title = item?.title || "";
+
+      textbooks = getTextbooks(course.id);
+
+      return;
+    }
+
+    const item = textbooks.find((c) => c.id == course.textbookId);
+    course.textbookName = item?.name || "";
+  };
 </script>
 
-<form
-  use:load
-  method="POST"
-  enctype="multipart/form-data"
-  use:enhance={submit}
-  action="?/generate"
->
-  <div style="font-size: .9rem;">
-    <Callout info>
-      Upload a pdf resource like lecture notes, slides, or textbooks for your
-      selected course, generate MCQs, share and study together with friends.
-    </Callout>
-  </div>
+{#if !$prep.id}
+  <Review {submit} {loading} total={$prep.questions.length} {publishId} />
+{:else}
+  <form
+    method="POST"
+    enctype="multipart/form-data"
+    use:enhance={submit}
+    action="?/generate"
+  >
+    <div>
+      <Callout info>
+        Select a course and material, or upload a PDF like notes, slides, or
+        textbooks. Generate MCQs, share and study with friends.
+      </Callout>
+    </div>
 
-  <div>
-    <select name="courses" id="courses" bind:value={title}>
-      <option value=""> -- Select a course -- </option>
-      {#each courses as { title }}
-        <option value={title}>
-          {title}
-        </option>
-      {/each}
-    </select>
-  </div>
+    <div>
+      <select
+        name="courses"
+        id="courses"
+        bind:value={course.id}
+        onchange={() => onchange("course")}
+      >
+        <option value=""> -- Select a course -- </option>
+        {#each courses as { title, id }}
+          <option value={id}>
+            {title}
+          </option>
+        {/each}
+      </select>
+    </div>
 
-  {#key filename}
-    <label for="pdf" class="upload" in:scale>
-      <Svg {ds} />
-      <span>{truncateString(filename, 25) || `Upload a pdf resource`}</span>
-      <input
-        type="file"
-        name="pdf"
-        id="pdf"
-        accept=".pdf"
-        class="v-hidden"
-        bind:files
-      />
-    </label>
-  {/key}
+    <div>
+      <select
+        name="textbooks"
+        id="textbooks"
+        bind:value={course.textbookId}
+        onchange={() => onchange("textbook")}
+      >
+        <option value=""> -- Select a textbook -- </option>
+        {#each textbooks as { name, id }}
+          <option value={id}>
+            {name}
+          </option>
+        {/each}
+      </select>
+    </div>
 
-  <input type="hidden" name="courseTitle" value={title} />
+    {#key filename}
+      <label for="pdf" class="upload" in:scale class:locked>
+        <Svg {ds} />
+        <span
+          >{truncateString(filename, 25) || `Or upload a your textbook`}</span
+        >
+        <input
+          type="file"
+          name="pdf"
+          id="pdf"
+          accept=".pdf"
+          class="v-hidden"
+          disabled={locked}
+          bind:files
+        />
+      </label>
+    {/key}
 
-  <div class="buttons">
-    <a href="/" class="ghost">
-      <Svg ds={arrowLeftIcons} dimension="25" />
-      <span>back</span>
-    </a>
+    <input type="hidden" name="courseTitle" value={course.title} />
+    <input type="hidden" name="courseId" value={course.id} />
+    <input type="hidden" name="textbookName" value={course.textbookName} />
+    <input type="hidden" name="textbookId" value={course.textbookId} />
 
-    <button>
-      <Spinner {loading} />
-      generate
-    </button>
-  </div>
-</form>
+    <div class="buttons">
+      <a href="/" class="ghost">
+        <Svg ds={arrowLeftIcons} dimension="25" />
+        <span>back</span>
+      </a>
+
+      <button>
+        <Spinner {loading} />
+        generate
+      </button>
+    </div>
+  </form>
+{/if}
 
 <style>
   .upload {
@@ -116,6 +150,15 @@
     gap: var(--gap-micro);
     border-radius: var(--radius-base);
     font-size: 1rem;
+  }
+
+  form {
+    gap: 2.5rem;
+    margin-top: -0.5rem;
+
+    label.locked {
+      opacity: 0.5;
+    }
   }
 
   .buttons {

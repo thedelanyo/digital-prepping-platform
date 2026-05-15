@@ -3,9 +3,9 @@ import { GEMINI_API_KEYS } from "$env/static/private";
 import { randomItem } from "$lib/helpers/arrays";
 import { GoogleGenAI } from "@google/genai";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { cleanJson, getContent, getSystemPrompt } from "./helpers";
+import { cleanJson, systemInstruction, transformTopics } from "./helpers";
 
-export const generateWithGemini = async (text: string, course: string) => {
+export const generateWithGemini = async (file: File) => {
   try {
     const schema = aiPrepSchema;
 
@@ -13,8 +13,12 @@ export const generateWithGemini = async (text: string, course: string) => {
 
     const ai = new GoogleGenAI({ apiKey });
 
+    const mimeType = "application/pdf";
+
+    const uploaded = await ai.files.upload({ file, config: { mimeType } });
+
     const config = {
-      systemInstruction: getSystemPrompt(course),
+      systemInstruction,
       responseMimeType: "application/json",
       responseSchema: zodToJsonSchema(schema),
     };
@@ -22,26 +26,31 @@ export const generateWithGemini = async (text: string, course: string) => {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       config,
-      contents: getContent(text),
+      contents: [
+        { fileData: { fileUri: uploaded.uri, mimeType } },
+        { text: "Generate quiz questions from this PDF." },
+      ],
     });
 
     const raw = response.text;
 
-    if (!raw) return [];
+    if (!raw) return { questions: [], topics: [] };
 
-    const parsed = schema.safeParse(JSON.parse(cleanJson(raw)));
+    const { data, success, error } = schema.safeParse(
+      JSON.parse(cleanJson(raw)),
+    );
 
-    if (!parsed.success) {
-      console.log(parsed.error);
-      return [];
+    if (!success) {
+      console.log(error);
+      return { questions: [], topics: [] };
     }
 
-    return parsed.data.questions;
+    return { questions: data.questions, topics: transformTopics(data.topics) };
   } catch (error: any) {
     console.log({
       provider: "gemini",
       message: error.message,
     });
-    return [];
+    return { questions: [], topics: [] };
   }
 };

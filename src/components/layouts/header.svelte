@@ -66,7 +66,7 @@
     display: flex;
     align-items: center;
     color: currentColor;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     gap: 0.5rem;
   }
 

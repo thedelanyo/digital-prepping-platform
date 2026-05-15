@@ -1,4 +1,4 @@
-import { getCourseTitle } from "$lib/helpers/topic.js";
+import { getCourseTitle } from "$lib/client/topic";
 import { getPreps } from "$lib/server/preps.js";
 import { error } from "@sveltejs/kit";
 

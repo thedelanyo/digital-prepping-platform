@@ -6,12 +6,12 @@ import { z } from "zod";
 const questionSchema = z.object({
   title: z.string().trim(),
   options: z.array(z.string()).min(2).max(3),
-  topics: z.array(z.string()).min(1).max(3),
   answerIndex: z.number().int().nonnegative().min(0).max(2),
   explanation: z.string().trim(),
 });
 
 export const aiPrepSchema = z.object({
+  topics: z.array(z.string()).min(3).max(6),
   questions: z.array(questionSchema),
 });
 
@@ -33,6 +33,7 @@ export const prepInit = {
   id: "",
   courseId: "",
   courseTitle: "",
+  topics: [] as string[],
   questions: [] as Question[],
 };
 
