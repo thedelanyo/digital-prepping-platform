@@ -1,5 +1,6 @@
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms";
+  import Backdrop from "$components/modals/backdrop.svelte";
   import Callout from "$components/modals/callout.svelte";
   import Name from "$components/modals/name.svelte";
   import Review from "$components/modals/review.svelte";
@@ -146,6 +147,8 @@
 {#if toAddName}
   <Name {submit} {loading} />
 {/if}
+
+<Backdrop {loading} />
 
 <style>
   .upload {
