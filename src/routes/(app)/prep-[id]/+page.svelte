@@ -1,6 +1,7 @@
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms";
   import Main from "$components/layouts/main.svelte";
+  import Explanation from "$components/modals/explanation.svelte";
   import Scorecard from "$components/modals/scorecard.svelte";
   import Svg from "$components/modals/svg.svelte";
   import { getPreplet, savePreplet } from "$db/connections/dexie.js";
@@ -9,7 +10,7 @@
   import type { SubmitFunction } from "@sveltejs/kit";
   import { onMount } from "svelte";
   import toast from "svelte-hot-french-toast";
-  import { fly } from "svelte/transition";
+  import { fly, scale } from "svelte/transition";
 
   let { data, form } = $props();
 
@@ -20,6 +21,7 @@
   let length = $derived(data.preps.length + 1);
   let direction = $derived("L");
   let answered = $derived(prep ? "YES" : "NO");
+  let explain = $derived("");
 
   onMount(async () => {
     $preplet = await getPreplet(id);
@@ -63,13 +65,28 @@
 
 <Main>
   <section {@attach load}>
-    {#each data.preps as { title, options }, prepIndex}
+    {#each data.preps as { title, options, explanation }, prepIndex}
       {@const index = prepIndex + 1}
 
       {#if index === stage}
         <div class="prep" in:fly={{ x: -500 }}>
           <div class="question">
-            <div>Question {index} of {length}</div>
+            <div>
+              <span>Question {index} of {length}</span>
+
+              {#if answered === "YES"}
+                <button
+                  in:scale
+                  class="ghost"
+                  onclick={() => (explain = explanation)}
+                >
+                  explain
+                </button>
+              {:else}
+                <button style="opacity: 0;">explain</button>
+              {/if}
+            </div>
+
             <p>{title}</p>
           </div>
 
@@ -140,6 +157,10 @@
       </button>
     </div>
   </form>
+
+  {#if explain}
+    <Explanation bind:explain />
+  {/if}
 </Main>
 
 <style>
@@ -148,17 +169,25 @@
   }
 
   .prep {
-    margin-top: -1rem;
+    margin-top: -1.5rem;
     gap: 3rem;
 
     .question {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 2rem;
 
       div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         font-size: 0.9rem;
+
+        button {
+          padding: var(--gap-nano) 1.3rem;
+          border-radius: 2rem;
+        }
       }
     }
 
@@ -169,7 +198,7 @@
 
       .radio {
         justify-content: start;
-        font-size: 1rem;
+        font-size: 0.8rem;
         padding-block: var(--gap-smallest);
       }
     }

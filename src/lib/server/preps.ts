@@ -79,8 +79,8 @@ export const getPreps = async (options: Options) => {
 
 export const getPrep = async (groupId: string) => {
   try {
-    const { id, title, options, answerIndex } = table;
-    const selectors = { id, title, options, answerIndex };
+    const { id, title, options, answerIndex, explanation } = table;
+    const selectors = { id, title, options, answerIndex, explanation };
 
     const results = await db
       .select(selectors)

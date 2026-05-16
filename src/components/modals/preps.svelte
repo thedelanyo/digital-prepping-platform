@@ -1,7 +1,10 @@
 <script lang="ts">
+  import { shareIcons } from "$lib/client/icons";
+  import { sharer } from "$lib/client/sharer";
   import { slugify, truncateString } from "$lib/helpers/text";
   import Callout from "./callout.svelte";
   import Hero from "./hero.svelte";
+  import Svg from "./svg.svelte";
 
   type Prep = {
     id: string;
@@ -16,7 +19,9 @@
 </script>
 
 <div class="preps">
-  {#each preps as { courseId, creatorId, creatorName, id, topics, title }}
+  {#each preps as prep}
+    {@const { courseId, creatorId, creatorName } = prep}
+    {@const { id, topics, title } = prep}
     {@const [, prepId] = id.split(":")}
     {@const href = `/prep-${prepId}`}
 
@@ -43,7 +48,11 @@
           <button onclick={() => (toggle = prepId)}>publish</button>
         {/if}
 
-        <a class="ghost" {href}>start prepping</a>
+        <a class="ghost" {href}>start prep</a>
+
+        <button class="ghost" onclick={() => sharer({ url: href })}>
+          <Svg ds={shareIcons} filled dimension="33" />
+        </button>
       </div>
     </div>
   {:else}
@@ -108,8 +117,13 @@
           align-items: center;
           gap: 0.5rem;
           font-size: 0.8rem;
-          padding: var(--gap-micro) var(--gap-small);
+          padding: var(--gap-nano) var(--gap-small);
           border-radius: 2rem;
+
+          &:last-child {
+            border: none;
+            padding: 0;
+          }
         }
       }
     }

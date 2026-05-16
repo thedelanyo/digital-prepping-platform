@@ -3,14 +3,14 @@
   import { getSearchParams } from "$lib/helpers/text";
   import { fly } from "svelte/transition";
 
-  let { tabs = [""], tab = "" } = $props();
+  let { tabs = [""], tab = "", width = "100%" } = $props();
 
   let { pathname, searchParams } = $derived(page.url);
   let current = $derived(tab || searchParams.get("tab") || tabs[0]);
   let params = $derived(getSearchParams(searchParams, "tab"));
 </script>
 
-<div class="wrapper">
+<div class="wrapper" style:width>
   {#each tabs as tab}
     {#if tab === current}
       {@const x = 100 / tabs.length}
@@ -35,7 +35,6 @@
     border: var(--border);
     border-radius: 2rem;
     position: relative;
-    width: 100%;
     overflow-x: scroll;
     white-space: nowrap;
     scrollbar-width: none;
@@ -49,6 +48,7 @@
     z-index: 1;
     transition: none;
     text-transform: capitalize;
+    font-size: 0.9rem;
   }
 
   .button:not(.alt-bg) {
