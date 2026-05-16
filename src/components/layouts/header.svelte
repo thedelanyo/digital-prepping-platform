@@ -12,7 +12,7 @@
 
 <Head>
   <a href="/">
-    <Logo size="33" />
+    <Logo />
     coprep
   </a>
 
