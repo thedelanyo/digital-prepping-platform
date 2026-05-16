@@ -91,7 +91,7 @@ export const actions = {
     const { courseId, courseTitle, topics, id } = prep;
 
     const preps = prep.questions.map(
-      ({ title, options, answerIndex }, index) => {
+      ({ title, options, answerIndex, explanation }, index) => {
         return {
           id: `${index}:${id}`,
           title,
@@ -102,6 +102,7 @@ export const actions = {
           topics: index === 0 ? topics.join(",") : "",
           creatorId: index === 0 ? creator.id : "",
           creatorName: index === 0 ? creator.name : "",
+          explanation,
         };
       },
     );

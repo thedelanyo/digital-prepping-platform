@@ -34,7 +34,7 @@
 
       <div class="author">
         {#if tab === "others" && creatorId}
-          <a href="/preps?author={creatorId}" class="ghost">
+          <a href="/preps?course={courseId}&author={creatorId}" class="ghost">
             <span>{truncateString(creatorName.split(" ")[0], 10)}</span>
           </a>
         {/if}

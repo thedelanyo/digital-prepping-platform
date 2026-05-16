@@ -27,6 +27,7 @@ export const prepTable = sqliteTable("preps", {
   topics: text("topics").default("").notNull(),
   creatorName: text("creator_name").default("").notNull(),
   creatorId: text("creator_id").default("").notNull(),
+  explanation: text("explanation").default("").notNull(),
 });
 
 export const prepInit = {
