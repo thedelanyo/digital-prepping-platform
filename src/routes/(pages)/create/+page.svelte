@@ -55,7 +55,7 @@
   };
 </script>
 
-{#if !$prep.id}
+{#if $prep.id}
   <Review {submit} {loading} total={$prep.questions.length} {publishId} />
 {:else}
   <form

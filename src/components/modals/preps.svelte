@@ -1,38 +1,66 @@
 <script lang="ts">
-  import { slugify } from "$lib/helpers/text";
-  import Creator from "./creator.svelte";
+  import { slugify, truncateString } from "$lib/helpers/text";
+  import Callout from "./callout.svelte";
+  import Hero from "./hero.svelte";
 
-  type Preps = {
+  type Prep = {
     id: string;
     creatorName: string;
     creatorId: string;
-    question: string;
+    title: string;
     topics: string;
     courseId: string;
   };
 
-  type Props = { preps: Preps[] };
-
-  let { preps }: Props = $props();
+  let { preps = [] as Prep[], tab = "", toggle = $bindable("") } = $props();
 </script>
 
 <div class="preps">
-  {#each preps as prep}
-    {@const [, prepId] = prep.id.split(":")}
-    {@const creator = `${prep.creatorId}:${prep.creatorName}`}
+  {#each preps as { courseId, creatorId, creatorName, id, topics, title }}
+    {@const [, prepId] = id.split(":")}
+    {@const href = `/prep-${prepId}`}
+
     <div class="prep">
-      <a href="/prep-{prepId}?creator={creator}"> {prep.question}</a>
+      <a {href}>{title}</a>
 
       <div class="topics">
-        {#each prep.topics.split(",") as topic}
+        {#each topics.split(",") as topic}
           {@const search = encodeURIComponent(topic)}
-          <a href="/preps?course={prep.courseId}&search={search}">
+          <a href="/preps?course={courseId}&search={search}">
             #{slugify(topic)}
           </a>
         {/each}
       </div>
 
-      <Creator {creator} {prepId} />
+      <div class="author">
+        {#if tab === "others" && creatorId}
+          <a href="/preps?author={creatorId}" class="ghost">
+            <span>{truncateString(creatorName.split(" ")[0], 10)}</span>
+          </a>
+        {/if}
+
+        {#if tab === "local"}
+          <button onclick={() => (toggle = prepId)}>publish</button>
+        {/if}
+
+        <a class="ghost" {href}>start prepping</a>
+      </div>
+    </div>
+  {:else}
+    <div class="empty">
+      <Hero size="10" />
+
+      <Callout info>
+        {#if tab === "you"}
+          You haven't created any preps in this course yet.
+          <a href="/create">Create prep</a>
+        {/if}
+
+        {#if tab === "others"}
+          We couldn't find any matching preps.
+          <a href="/create">Create a prep</a>
+        {/if}
+      </Callout>
     </div>
   {/each}
 </div>
@@ -47,11 +75,11 @@
     .prep {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: var(--gap-small);
       box-shadow: var(--shadow-inset);
-      padding: 1rem;
+      padding: var(--gap-smallest);
       border-radius: var(--radius-base);
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       width: 100%;
 
       & > a {
@@ -68,6 +96,29 @@
           font-size: 1rem;
         }
       }
+
+      .author {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 1rem;
+
+        .ghost {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.8rem;
+          padding: var(--gap-micro) var(--gap-small);
+          border-radius: 2rem;
+        }
+      }
     }
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    gap: 2rem;
   }
 </style>

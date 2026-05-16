@@ -99,16 +99,6 @@ export const actions = {
       },
     );
 
-    if (preps.length < 10) {
-      message = "At least 10 questions";
-      return fail(400, { message, state });
-    }
-
-    if (preps.length > 20) {
-      message = "At most 10 questions";
-      return fail(400, { message, state });
-    }
-
     try {
       await db.insert(table).values(preps);
 

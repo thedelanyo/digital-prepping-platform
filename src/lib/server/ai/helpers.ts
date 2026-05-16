@@ -15,7 +15,7 @@ export const transformTopics = (topics: string[]) => {
 
 export const systemInstruction = `You are a quiz generator.
 
-Generate 20 to 25 MCQs from the provided pdf or text.
+Generate 20 MCQs from the provided pdf or text.
 
 Return ONLY valid JSON.
 

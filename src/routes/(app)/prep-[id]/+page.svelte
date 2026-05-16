@@ -63,19 +63,14 @@
 
 <Main>
   <section {@attach load}>
-    {#each data.preps as { question, options }, prepIndex}
+    {#each data.preps as { title, options }, prepIndex}
       {@const index = prepIndex + 1}
 
       {#if index === stage}
         <div class="prep" in:fly={{ x: -500 }}>
           <div class="question">
-            <div>
-              Question {index} of {length}
-            </div>
-
-            <p>
-              {question}
-            </p>
+            <div>Question {index} of {length}</div>
+            <p>{title}</p>
           </div>
 
           <form

@@ -12,3 +12,15 @@ export const slugify = (str: string) => {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 };
+
+export const getSearchParams = (params: URLSearchParams, filter = "") => {
+  let results = "";
+
+  for (const [key, value] of params) {
+    if (key !== filter) {
+      results += `&${key}=${value}`;
+    }
+  }
+
+  return results.replace("&", "");
+};
