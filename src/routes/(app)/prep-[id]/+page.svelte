@@ -170,7 +170,7 @@
 
   .prep {
     margin-top: -2rem;
-    gap: 2rem;
+    gap: 1.5rem;
 
     .question {
       font-size: 1.15rem;
@@ -199,6 +199,7 @@
       .radio {
         justify-content: start;
         font-size: 0.9rem;
+        line-height: 1.2rem;
         padding-block: var(--gap-smallest);
       }
     }
