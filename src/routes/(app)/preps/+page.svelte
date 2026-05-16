@@ -1,13 +1,17 @@
 <script lang="ts">
   import Main from "$components/layouts/main.svelte";
+  import Nav from "$components/layouts/nav.svelte";
   import Preps from "$components/modals/preps.svelte";
+  import Svg from "$components/modals/svg.svelte";
   import Tabs from "$components/modals/tabs.svelte";
+  import { hamburgerIcons } from "$lib/client/icons.js";
   import { fly } from "svelte/transition";
 
   let { data } = $props();
   let { title, preps, tab } = $derived(data);
 
   let toggle = $state("");
+  let is_open = $state(false);
 </script>
 
 <Main>
@@ -22,10 +26,16 @@
   {/key}
 
   <section class="footer">
-    <a href="/" class="ghost">return</a>
-    <Tabs tabs={["others", "you"]} width="65%" />
+    <button class="ghost" onclick={() => (is_open = true)}>
+      <Svg ds={hamburgerIcons} />
+    </button>
+    <Tabs tabs={["others", "you"]} width="70%" />
   </section>
 </Main>
+
+{#if is_open}
+  <Nav bind:is_open />
+{/if}
 
 <style>
   h1 {
@@ -47,16 +57,13 @@
     display: flex;
     flex-direction: row !important;
     justify-content: space-between;
-    padding: var(--gap-smallest);
+    padding: var(--gap-smallest) var(--gap-base);
     border-top: var(--border);
     background-color: var(--bg-color);
     gap: 0;
 
     .ghost {
-      border-radius: 2rem;
-      padding: var(--gap-micro) 1rem;
-      font-size: 0.9rem;
-      width: 30%;
+      padding: var(--gap-micro);
     }
   }
 </style>
