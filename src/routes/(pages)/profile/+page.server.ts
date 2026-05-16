@@ -1,4 +1,4 @@
-import { generateId } from "$lib/helpers/id.js";
+import { hashString } from "$lib/helpers/id.js";
 import { saveToCookie } from "$lib/server/cookies.js";
 import { getCreator } from "$lib/server/creator.js";
 import { fail } from "@sveltejs/kit";
@@ -9,7 +9,7 @@ export const load = async ({ cookies }) => {
 };
 
 export const actions = {
-  default: async ({ request, cookies }) => {
+  addName: async ({ request, cookies }) => {
     const form = await request.formData();
     let state: "error" | "success" = "error";
     let message = "Successfully added";
@@ -22,7 +22,8 @@ export const actions = {
     }
 
     try {
-      const creator = { name, id: generateId() };
+      const id = await hashString(name);
+      const creator = { name, id };
       saveToCookie({ name: "creator", data: creator, cookies });
 
       state = "success";

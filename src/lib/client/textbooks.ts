@@ -100,9 +100,14 @@ export const textbooks = [
     name: "Errors",
   },
   {
-    id: "1_L95wN05HtBbCGgHjsJ0MT01kk78VdIw",
+    id: "12Px5EnR_UUKpR1L6Y4hiB37ZI_-14Kbj",
     courseId: "data_comm",
-    name: "Data_Comm_and_Networking_textbook",
+    name: "1Data_Comm_and_Networking_textbook",
+  },
+  {
+    id: "1IhJ9N4IO9V8DWtQqbaMNDYoLFfV51WBj",
+    courseId: "data_comm",
+    name: "2Data_Comm_and_Networking_textbook",
   },
   {
     id: "1lf_4eYwbE8XLZkBPydli1gvLVsQUDrhE",

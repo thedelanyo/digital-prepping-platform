@@ -1,8 +1,9 @@
 import { tursoDB as db } from "$db/connections/turso.js";
 import { prepTable as table } from "$db/schema/preps";
 import type { Prep } from "$db/schema/preps.js";
-import { generateId } from "$lib/helpers/id.js";
+import { generateId, hashString } from "$lib/helpers/id.js";
 import { generateWithGemini } from "$lib/server/ai/gemini";
+import { saveToCookie } from "$lib/server/cookies";
 import { getCreator } from "$lib/server/creator";
 import { downloadFile } from "$lib/server/file.js";
 import { fail } from "@sveltejs/kit";
@@ -49,6 +50,12 @@ export const actions = {
       }
 
       const { questions, topics } = await generateWithGemini(file);
+
+      if (!questions.length) {
+        message = "Error generating MCQs.";
+        return fail(400, { message, state });
+      }
+
       const prep = {
         id: generateId(),
         courseId,
@@ -65,7 +72,7 @@ export const actions = {
     }
   },
 
-  publish: async ({ request, cookies }) => {
+  save: async ({ request, cookies }) => {
     const form = await request.formData();
     let state: "error" | "success" = "error";
     let message = "Successfully publish prep";
@@ -74,7 +81,7 @@ export const actions = {
 
     if (!creator.id) {
       message = "Add your name.";
-      return fail(400, { message, state, toAddBio: true });
+      return fail(400, { message, state, toAddName: true });
     }
 
     const prepStr = String(form.get("prep"));
@@ -108,6 +115,32 @@ export const actions = {
     } catch (e: any) {
       console.log(e.message);
       return { state, message: "Error publishing prep" };
+    }
+  },
+
+  addName: async ({ request, cookies }) => {
+    const form = await request.formData();
+    let state: "error" | "success" = "error";
+    let message = "Name added successfully";
+
+    const name = String(form.get("name")).trim();
+
+    if (!name) {
+      message = "Add your name";
+      return fail(400, { message, state });
+    }
+
+    try {
+      const id = await hashString(name);
+      const creator = { name, id };
+      saveToCookie({ name: "creator", data: creator, cookies });
+
+      state = "success";
+
+      return { state, message, creatorId: id };
+    } catch (e: any) {
+      console.log(e.message);
+      return { state, message: "Internal Error" };
     }
   },
 };

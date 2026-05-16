@@ -7,7 +7,7 @@
 </script>
 
 <Drawer>
-  <form method="POST" use:enhance={submit}>
+  <form method="POST" use:enhance={submit} action="?/addName">
     <div class="div">
       <label for="name">Enter your name</label>
       <input type="text" name="name" id="name" />

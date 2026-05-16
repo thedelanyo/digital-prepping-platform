@@ -1,6 +1,7 @@
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms";
   import Callout from "$components/modals/callout.svelte";
+  import Name from "$components/modals/name.svelte";
   import Review from "$components/modals/review.svelte";
   import Spinner from "$components/modals/spinner.svelte";
   import Svg from "$components/modals/svg.svelte";
@@ -18,7 +19,7 @@
   let loading = $state(false);
   let course = $state({ title: "", id: "", textbookName: "", textbookId: "" });
   let ds = $state(uploadIcons);
-  let toAddBio = $state(false);
+  let toAddName = $state(false);
   let publishId = $state("");
   let files = $state<FileList | null>(null);
   let filename = $derived(files ? files[0].name : "");
@@ -36,6 +37,8 @@
       form?.message && toast[form.state](form.message);
       $prep = form?.prep || $prep;
       publishId = form?.publishId || publishId;
+      toAddName = form?.toAddName || toAddName;
+      toAddName = form?.creatorId ? false : toAddName;
       loading = false;
     };
   };
@@ -138,6 +141,10 @@
       </button>
     </div>
   </form>
+{/if}
+
+{#if toAddName}
+  <Name {submit} {loading} />
 {/if}
 
 <style>
