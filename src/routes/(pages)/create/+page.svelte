@@ -60,7 +60,7 @@
 </script>
 
 {#if $prep.id}
-  <Review {submit} {loading} total={$prep.questions.length} {publishId} />
+  <Review {submit} {loading} total={$prep.questions.length} bind:publishId />
 {:else}
   <form
     method="POST"
