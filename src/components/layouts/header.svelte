@@ -1,42 +1,13 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import Svg from "$components/modals/svg.svelte";
   import { hamburgerIcons } from "$lib/client/icons";
-  //   import { downloadIcon, plusIcon } from "$lib/client/icons";
-  import { page } from "$app/state";
-  import { onMount } from "svelte";
   import { scale } from "svelte/transition";
   import Head from "./head.svelte";
   import Logo from "./logo.svelte";
   import Nav from "./nav.svelte";
 
-  interface PromptEvent extends Event {
-    prompt: () => void;
-    userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-  }
-
   let is_open = $state(false);
-
-  let differedPrompt = $state<PromptEvent | null>(null);
-  let app_installed = $state(false);
-
-  onMount(async () => {
-    const nav = navigator as any;
-    app_installed = !!(await nav.getInstalledRelatedApps?.())?.length;
-
-    window.addEventListener("beforeinstallprompt", (event: Event) => {
-      differedPrompt = event as PromptEvent;
-    });
-  });
-
-  const onclick = async () => {
-    if (!differedPrompt) return;
-
-    differedPrompt.prompt();
-
-    const { outcome } = await differedPrompt.userChoice;
-
-    app_installed = outcome === "accepted";
-  };
 </script>
 
 <Head>

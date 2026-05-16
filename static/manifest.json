@@ -1,0 +1,49 @@
+{
+  "short_name": "Coprep",
+  "name": "Coprep",
+  "description": "",
+  "start_url": "/",
+  "scope": "/",
+  "id": "coprep",
+  "display": "standalone",
+  "background_color": "#151515",
+  "theme_color": "#151515",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/coprep1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/coprep512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/coprep384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/coprep256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/coprep192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+
+  "related_applications": [
+    { "platform": "webapp", "url": "/manifest.json", "id": "coprep" }
+  ],
+  "splash_pages": null
+}
