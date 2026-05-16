@@ -5,8 +5,8 @@ import { z } from "zod";
 
 const questionSchema = z.object({
   title: z.string().trim(),
-  options: z.array(z.string()).min(2).max(3),
-  answerIndex: z.number().int().nonnegative().min(0).max(2),
+  options: z.array(z.string()).min(3).max(4),
+  answerIndex: z.number().int().nonnegative().min(0).max(3),
   explanation: z.string().trim(),
 });
 

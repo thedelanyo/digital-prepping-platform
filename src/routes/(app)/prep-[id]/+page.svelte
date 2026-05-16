@@ -169,14 +169,14 @@
   }
 
   .prep {
-    margin-top: -1.5rem;
-    gap: 3rem;
+    margin-top: -2rem;
+    gap: 2rem;
 
     .question {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 1rem;
 
       div {
         display: flex;
@@ -194,11 +194,11 @@
     .options {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1rem;
 
       .radio {
         justify-content: start;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         padding-block: var(--gap-smallest);
       }
     }

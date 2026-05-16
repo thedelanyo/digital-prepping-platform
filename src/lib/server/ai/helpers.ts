@@ -29,9 +29,10 @@ With a topics array of single relevant words which was covered
 - topics: string[]
 
 Rules:
-- options must contain 3 choices
-- topics must be an array of single relevant words
-- answerIndex must match the correct option
-- no markdown
-- no extra commentary
+- options can contain between 3 to 4 choices.
+- Randomize the correct answers to make it hard to predict.
+- topics must be an array of single relevant words.
+- answerIndex must match the correct option.
+- no markdown.
+- no extra commentary.
 `;
