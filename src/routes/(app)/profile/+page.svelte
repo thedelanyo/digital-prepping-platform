@@ -1,5 +1,6 @@
 <script lang="ts">
   import { applyAction } from "$app/forms";
+  import Main from "$components/layouts/main.svelte";
   import Name from "$components/modals/name.svelte";
   import type { SubmitFunction } from "@sveltejs/kit";
   import toast from "svelte-hot-french-toast";
@@ -25,9 +26,11 @@
   };
 </script>
 
-<section>
-  <h1>Welcome, {creator.name}</h1>
-</section>
+<Main
+  ><section>
+    <h1>Welcome, {creator.name}</h1>
+  </section>
+</Main>
 
 {#if !creator.id}
   <Name {loading} {submit} />

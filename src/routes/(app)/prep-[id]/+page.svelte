@@ -61,6 +61,10 @@
       });
     });
   };
+
+  const getSub = (index: number) => {
+    return index === 0 ? "A" : index === 1 ? "B" : index === 2 ? "C" : "D";
+  };
 </script>
 
 <Main>
@@ -106,6 +110,7 @@
               {@const danger = i !== answer && selected === i}
               {@const checked = selected === i}
               {@const disabled = answered === "YES"}
+              {@const sub = getSub(i)}
 
               <button onclick={() => (selected = i)} {disabled}>
                 <label
@@ -122,7 +127,10 @@
                     id="opt_{i}"
                     name="option"
                   />
-                  <span>{option}</span>
+                  <div>
+                    <span class="sub">({sub})</span>
+                    <span>{option}</span>
+                  </div>
                 </label>
               </button>
             {/each}
@@ -198,9 +206,14 @@
 
       .radio {
         justify-content: start;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         line-height: 1.2rem;
         padding-block: var(--gap-smallest);
+      }
+
+      .sub {
+        font-size: 0.7rem;
+        font-weight: bolder;
       }
     }
   }
