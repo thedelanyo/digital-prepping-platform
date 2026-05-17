@@ -21,7 +21,7 @@
 
 <form in:fly={{ x: -500 }} method="POST" use:enhance={submit} action="?/save">
   <div>
-    <Hero size="15" />
+    <Hero size="13" />
 
     <Callout success>
       Successfully generated {total} prep MCQs. Save now to begin studying with your
@@ -48,14 +48,22 @@
 
 <style>
   form {
-    gap: 3rem;
+    & > div:first-child {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
 
     .buttons {
-      width: 100%;
       display: flex;
       flex-direction: row;
-      margin-top: 3rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
       justify-content: space-between;
+      padding: var(--gap-small);
+      border-top: var(--border);
 
       & > * {
         width: 100%;

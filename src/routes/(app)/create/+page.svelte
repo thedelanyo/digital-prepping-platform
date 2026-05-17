@@ -1,5 +1,6 @@
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms";
+  import Main from "$components/layouts/main.svelte";
   import Backdrop from "$components/modals/backdrop.svelte";
   import Callout from "$components/modals/callout.svelte";
   import Name from "$components/modals/name.svelte";
@@ -59,90 +60,92 @@
   };
 </script>
 
-{#if $prep.id}
-  <Review {submit} {loading} total={$prep.questions.length} bind:publishId />
-{:else}
-  <form
-    method="POST"
-    enctype="multipart/form-data"
-    use:enhance={submit}
-    action="?/generate"
-  >
-    <div>
-      <Callout info>
-        Select a course and material, or upload a PDF like notes, slides, or
-        textbooks. Generate MCQs, share and study with friends.
-      </Callout>
-    </div>
+<Main>
+  {#if $prep.id}
+    <Review {submit} {loading} total={$prep.questions.length} bind:publishId />
+  {:else}
+    <form
+      method="POST"
+      enctype="multipart/form-data"
+      use:enhance={submit}
+      action="?/generate"
+    >
+      <div>
+        <Callout info>
+          Select a course and material, or upload a PDF like notes, slides, or
+          textbooks. Generate MCQs, share and study with friends.
+        </Callout>
+      </div>
 
-    <div>
-      <select
-        name="courses"
-        id="courses"
-        bind:value={course.id}
-        onchange={() => onchange("course")}
-      >
-        <option value=""> -- Select a course -- </option>
-        {#each courses as { title, id }}
-          <option value={id}>
-            {title}
-          </option>
-        {/each}
-      </select>
-    </div>
-
-    <div>
-      <select
-        name="textbooks"
-        id="textbooks"
-        bind:value={course.textbookId}
-        onchange={() => onchange("textbook")}
-      >
-        <option value=""> -- Select a textbook -- </option>
-        {#each textbooks as { name, id }}
-          <option value={id}>
-            {name}
-          </option>
-        {/each}
-      </select>
-    </div>
-
-    {#key filename}
-      <label for="pdf" class="upload" in:scale class:locked>
-        <Svg {ds} />
-        <span
-          >{truncateString(filename, 25) || `Or upload a your textbook`}</span
+      <div>
+        <select
+          name="courses"
+          id="courses"
+          bind:value={course.id}
+          onchange={() => onchange("course")}
         >
-        <input
-          type="file"
-          name="pdf"
-          id="pdf"
-          accept=".pdf"
-          class="v-hidden"
-          disabled={locked}
-          bind:files
-        />
-      </label>
-    {/key}
+          <option value=""> -- Select a course -- </option>
+          {#each courses as { title, id }}
+            <option value={id}>
+              {title}
+            </option>
+          {/each}
+        </select>
+      </div>
 
-    <input type="hidden" name="courseTitle" value={course.title} />
-    <input type="hidden" name="courseId" value={course.id} />
-    <input type="hidden" name="textbookName" value={course.textbookName} />
-    <input type="hidden" name="textbookId" value={course.textbookId} />
+      <div>
+        <select
+          name="textbooks"
+          id="textbooks"
+          bind:value={course.textbookId}
+          onchange={() => onchange("textbook")}
+        >
+          <option value=""> -- Select a textbook -- </option>
+          {#each textbooks as { name, id }}
+            <option value={id}>
+              {name}
+            </option>
+          {/each}
+        </select>
+      </div>
 
-    <div class="buttons">
-      <a href="/" class="ghost">
-        <Svg ds={arrowLeftIcons} dimension="25" />
-        <span>back</span>
-      </a>
+      {#key filename}
+        <label for="pdf" class="upload" in:scale class:locked>
+          <Svg {ds} />
+          <span
+            >{truncateString(filename, 25) || `Or upload a your textbook`}</span
+          >
+          <input
+            type="file"
+            name="pdf"
+            id="pdf"
+            accept=".pdf"
+            class="v-hidden"
+            disabled={locked}
+            bind:files
+          />
+        </label>
+      {/key}
 
-      <button>
-        <Spinner {loading} />
-        generate
-      </button>
-    </div>
-  </form>
-{/if}
+      <input type="hidden" name="courseTitle" value={course.title} />
+      <input type="hidden" name="courseId" value={course.id} />
+      <input type="hidden" name="textbookName" value={course.textbookName} />
+      <input type="hidden" name="textbookId" value={course.textbookId} />
+
+      <div class="buttons">
+        <a href="/" class="ghost">
+          <Svg ds={arrowLeftIcons} dimension="25" />
+          <span>back</span>
+        </a>
+
+        <button>
+          <Spinner {loading} />
+          generate
+        </button>
+      </div>
+    </form>
+  {/if}
+</Main>
 
 {#if toAddName}
   <Name {submit} {loading} />
@@ -163,8 +166,8 @@
   }
 
   form {
-    gap: 2.5rem;
-    margin-top: -0.5rem;
+    gap: 3rem;
+    margin-top: -1rem;
 
     label.locked {
       opacity: 0.5;
@@ -175,11 +178,12 @@
     display: flex;
     flex-direction: row;
     position: fixed;
-    bottom: 1rem;
+    bottom: 0;
     left: 0;
     right: 0;
     justify-content: space-between;
-    padding-inline: var(--gap-small);
+    padding: var(--gap-small);
+    border-top: var(--border);
 
     button,
     a {
@@ -187,9 +191,10 @@
       border-radius: 2rem;
       font-size: 0.9rem;
       text-transform: uppercase;
+      width: 100%;
 
-      &:last-child {
-        width: 55%;
+      &:first-child {
+        width: 60%;
       }
 
       &.ghost {

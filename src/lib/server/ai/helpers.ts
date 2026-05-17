@@ -1,3 +1,5 @@
+import { randomItem } from "$lib/helpers/arrays";
+
 export const cleanJson = (text: string) => {
   return text
     .replace(/```json/g, "")
@@ -6,16 +8,15 @@ export const cleanJson = (text: string) => {
 };
 
 export const transformTopics = (topics: string[]) => {
-  return topics
-    .map((topic) => {
-      return topic.split(" ")[0];
-    })
-    .slice(0, 3);
+  return topics.map((topic) => topic.split(" ")[0]).slice(0, 3);
 };
 
-export const systemInstruction = `You are a quiz generator.
+export const getSysPrompt = () => {
+  const max = randomItem([20, 25, 23, 22, 18, 15, 19, 30, 21, 16, 17, 10]);
 
-Generate 20 MCQs from the provided pdf or text.
+  const prompt = `You are a quiz generator.
+
+Generate ${max} MCQs from the provided pdf or text.
 
 Return ONLY valid JSON.
 
@@ -36,3 +37,6 @@ Rules:
 - no markdown.
 - no extra commentary.
 `;
+
+  return prompt;
+};

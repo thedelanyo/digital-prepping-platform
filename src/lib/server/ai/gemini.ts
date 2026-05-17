@@ -3,7 +3,7 @@ import { GEMINI_API_KEYS } from "$env/static/private";
 import { randomItem } from "$lib/helpers/arrays";
 import { GoogleGenAI } from "@google/genai";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { cleanJson, systemInstruction, transformTopics } from "./helpers";
+import { cleanJson, getSysPrompt, transformTopics } from "./helpers";
 
 export const generateWithGemini = async (file: File) => {
   try {
@@ -18,7 +18,7 @@ export const generateWithGemini = async (file: File) => {
     const uploaded = await ai.files.upload({ file, config: { mimeType } });
 
     const config = {
-      systemInstruction,
+      systemInstruction: getSysPrompt(),
       responseMimeType: "application/json",
       responseSchema: zodToJsonSchema(schema),
     };

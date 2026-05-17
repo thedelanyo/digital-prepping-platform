@@ -25,6 +25,9 @@
     display: flex;
     flex-direction: column;
     padding: 2rem 1rem;
-    gap: 3rem;
+
+    button {
+      border-radius: 2rem;
+    }
   }
 </style>
