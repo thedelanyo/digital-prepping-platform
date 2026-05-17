@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { shareIcons } from "$lib/client/icons";
+  import { bookmarkIcons, shareIcons, userIcons } from "$lib/client/icons";
   import { sharer } from "$lib/client/sharer";
   import { slugify, truncateString } from "$lib/helpers/text";
   import Callout from "./callout.svelte";
@@ -15,7 +15,7 @@
     courseId: string;
   };
 
-  let { preps = [] as Prep[], tab = "", toggle = $bindable("") } = $props();
+  let { preps = [] as Prep[], tab = "" } = $props();
 </script>
 
 <div class="preps">
@@ -26,31 +26,35 @@
     {@const href = `/prep-${prepId}`}
 
     <div class="prep">
-      <a {href}>{title}</a>
+      <a {href} class="title">
+        {truncateString(title, 48)} read more
+      </a>
 
       <div class="topics">
         {#each topics.split(",") as topic}
           {@const search = encodeURIComponent(topic)}
-          <a href="/preps?course={courseId}&search={search}">
+          {@const link = `/preps?course=${courseId}&search=${search}`}
+          <a href={link} data-sveltekit-replacestate>
             #{slugify(topic)}
           </a>
         {/each}
       </div>
 
       <div class="author">
+        <a class="ghost" {href}>start prep</a>
+
         {#if tab === "others" && creatorId}
-          <a href="/preps?course={courseId}&author={creatorId}" class="ghost">
-            <span>{truncateString(creatorName.split(" ")[0], 10)}</span>
+          {@const link = `/preps?course=${courseId}&author=${creatorId}`}
+          <a href={link} class="ghost icon" data-sveltekit-replacestate>
+            <Svg ds={userIcons} dimension="33" />
           </a>
         {/if}
 
-        {#if tab === "local"}
-          <button onclick={() => (toggle = prepId)}>publish</button>
-        {/if}
+        <button class="ghost icon">
+          <Svg ds={bookmarkIcons} dimension="33" />
+        </button>
 
-        <a class="ghost" {href}>start prep</a>
-
-        <button class="ghost" onclick={() => sharer({ url: href })}>
+        <button class="ghost icon" onclick={() => sharer({ url: href })}>
           <Svg ds={shareIcons} filled dimension="33" />
         </button>
       </div>
@@ -79,19 +83,18 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 1.5rem;
 
     .prep {
       display: flex;
       flex-direction: column;
-      gap: var(--gap-small);
       box-shadow: var(--shadow-inset);
       padding: var(--gap-smallest);
       border-radius: var(--radius-base);
-      font-size: 1.1rem;
       width: 100%;
+      gap: var(--gap-smallest);
 
-      & > a {
+      .title {
         color: currentColor;
       }
 
@@ -102,7 +105,7 @@
 
         a {
           text-transform: lowercase;
-          font-size: 1rem;
+          font-size: 0.9rem;
         }
       }
 
@@ -110,7 +113,7 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        margin-top: 1rem;
+        margin-top: var(--gap-smallest);
 
         .ghost {
           display: flex;
@@ -120,7 +123,7 @@
           padding: var(--gap-nano) var(--gap-small);
           border-radius: 2rem;
 
-          &:last-child {
+          &.icon {
             border: none;
             padding: 0;
           }

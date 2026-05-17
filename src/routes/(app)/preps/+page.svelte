@@ -10,7 +10,6 @@
   let { data } = $props();
   let { title, preps, tab } = $derived(data);
 
-  let toggle = $state("");
   let is_open = $state(false);
 </script>
 
@@ -21,7 +20,7 @@
         <h1>{title}</h1>
       </div>
 
-      <Preps {preps} {tab} bind:toggle />
+      <Preps {preps} {tab} />
     </section>
   {/key}
 
@@ -42,7 +41,6 @@
     font-size: 1.3rem;
     margin-bottom: -2rem;
     text-transform: capitalize;
-    font-weight: normal;
   }
 
   section:not(.footer) {
@@ -64,6 +62,7 @@
 
     .ghost {
       padding: var(--gap-micro);
+      border-radius: 0.5rem;
     }
   }
 </style>
