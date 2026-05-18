@@ -41,7 +41,7 @@
       </div>
 
       <div class="author">
-        <a class="ghost" {href}>start prep</a>
+        <a class="ghost" {href}>take prep</a>
 
         {#if tab === "others" && creatorId}
           {@const link = `/preps?course=${courseId}&author=${creatorId}`}

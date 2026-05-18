@@ -23,12 +23,18 @@ export const generateWithGemini = async (file: File) => {
       responseSchema: zodToJsonSchema(schema),
     };
 
+    const model = randomItem([
+      "gemini-3.1-flash-lite",
+      "gemini-3-flash-preview",
+      "gemini-2.5-flash-lite",
+    ]);
+
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model,
       config,
       contents: [
         { fileData: { fileUri: uploaded.uri, mimeType } },
-        { text: "Generate quiz questions from this PDF." },
+        { text: `Generate quiz questions from this PDF.` },
       ],
     });
 

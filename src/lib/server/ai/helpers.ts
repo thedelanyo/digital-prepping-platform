@@ -16,26 +16,28 @@ export const getSysPrompt = () => {
 
   const prompt = `You are a quiz generator.
 
-Generate ${max} MCQs from the provided pdf or text.
+Create ${max} multiple-choice questions from the provided PDF or text.
 
 Return ONLY valid JSON.
 
-Each item must contain:
-- title: string - The question itself
+Each item must include:
+- title: string - The question
 - options: string[] - Possible answers
-- answerIndex: number - Index of the answer in options
+- answerIndex: number - Index of the correct answer in options
 - explanation: string - Explanation of the answer
 
-With a topics array of single relevant words which was covered
+Include a topics array of relevant single-word terms:
 - topics: string[]
 
 Rules:
-- options can contain between 3 to 4 choices.
-- Randomize the correct answers to make it hard to predict.
+- Provide 3 or 4 options per question.
+- Randomize the correct answer positions.
 - topics must be an array of single relevant words.
 - answerIndex must match the correct option.
-- no markdown.
-- no extra commentary.
+- No markdown.
+- No extra commentary.
+- Analyze the provided PDF or text content and choose questions
+  based on important areas across different pages.
 `;
 
   return prompt;
